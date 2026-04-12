@@ -12,6 +12,10 @@
         {
             "source": "/(.*)",
             "destination": "/public/$1"
+        },
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/index.py"
         }
     ]
 }
