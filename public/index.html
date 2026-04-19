@@ -14,16 +14,27 @@
         <div id="view-login" class="view active glass-panel">
             <h1>AI 在地導遊</h1>
             <p>請使用您的 Google 帳號登入系統</p>
-            <div id="g_id_onload"
-                 data-client_id="970732083734-28k4jtivkvrdcuf314sp3d1c3ltfn9oj.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-callback="handleGoogleLogin"
-                 data-auto_prompt="false"></div>
-            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="center"></div>
+            <div id="google_btn_container" style="display: flex; justify-content: center; margin-top: 15px;"></div>
         </div>
     </div>
     <script>
+        window.onload = function () {
+            let clientId = "970732083734-28k4jtivkvrdcuf314sp3d1c3ltfn9oj.apps.googleusercontent.com"; // Localhost
+            if (window.location.hostname.includes('vercel.app')) {
+                clientId = "970732083734-j5s5c6dnakt75ds6bhsu0lqr0b41lcbg.apps.googleusercontent.com"; // Vercel
+            }
+
+            google.accounts.id.initialize({
+                client_id: clientId,
+                callback: handleGoogleLogin,
+                auto_prompt: false
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("google_btn_container"),
+                { theme: "outline", size: "large", type: "standard", shape: "rectangular", text: "signin_with", logo_alignment: "center" }
+            );
+        };
+
         function decodeJwtResponse(token) {
             let base64Url = token.split('.')[1];
             let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
