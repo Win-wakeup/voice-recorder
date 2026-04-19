@@ -2,14 +2,15 @@
   "version": 2,
   "builds": [
     { "src": "server.js", "use": "@vercel/node" },
-    { "src": "api/index.py", "use": "@vercel/python" },
-    { "src": "public/**", "use": "@vercel/static" }
+    { "src": "api/index.py", "use": "@vercel/python" }
   ],
+  "functions": {
+    "server.js": {
+      "includeFiles": "public/**"
+    }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/upload", "destination": "/server.js" },
-    { "source": "/register", "destination": "/register.html" },
-    { "source": "/user/:id/record", "destination": "/record.html" },
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/server.js" }
   ]
 }
