@@ -283,6 +283,11 @@ async def translate_text(request: TranslationRequest, background_tasks: Backgrou
             )       
             result_text = response.text.strip()
             
+            # Robust JSON extraction
+            json_match = re.search(r'\{.*\}', result_text, re.DOTALL)
+            if json_match:
+                result_text = json_match.group(0)
+            
             try:
                 parsed_result = json.loads(result_text)
                 raw_english = parsed_result.get("raw_translation", raw_english)
