@@ -81,17 +81,20 @@ system_instruction = (
 )
 
 if api_keys_env:
-    translator_model = genai.GenerativeModel(
-        model_name="gemini-2.5-flash-lite",
-        system_instruction=system_instruction,
-        generation_config={
-            "response_mime_type": "application/json",
-        }
-    )
+    try:
+        translator_model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash",
+            system_instruction=system_instruction,
+            generation_config={
+                "response_mime_type": "application/json",
+            }
+        )
+        logger.info("Gemini model initialized successfully.")
+    except Exception as e:
+        logger.error(f"Failed to initialize Gemini model: {e}")
+        translator_model = None
 else:
     translator_model = None
-
-from fastapi.middleware.cors import CORSMiddleware
 
 # ==========================================
 # FastAPI App
