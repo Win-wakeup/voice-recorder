@@ -246,26 +246,32 @@
                 
                 transEn.innerText = transData.final_english;
 
-                // 4. Voice Cloning & TTS
-                statusEl.innerText = "🪄 步驟 4/4: ElevenLabs 正在複製您的聲音合成英文語音...";
-                const cloneForm = new FormData();
-                cloneForm.append('file', blob, 'recording.webm');
-                cloneForm.append('userId', currentUser);
-                cloneForm.append('text', transData.final_english);
+                // 4. TTS with pre-enrolled voice
+                statusEl.innerText = "🪄 步驟 4/4: ElevenLabs 正在用您的聲音合成英文語音...";
+                
+                const savedVoiceId = localStorage.getItem('voice_id');
+                if (!savedVoiceId) throw new Error("找不到聲紋 ID，請重新完成聲紋註冊！");
 
-                const cloneRes = await fetch(`${API_BASE}/api/clone`, { method: 'POST', body: cloneForm });
-                if (!cloneRes.ok) throw new Error("Voice Clone 失敗");
+                const ttsForm = new FormData();
+                ttsForm.append('voice_id', savedVoiceId);
+                ttsForm.append('text', transData.final_english);
 
-                const cloneBlob = await cloneRes.blob();
-                const cloneUrl = URL.createObjectURL(cloneBlob);
+                const ttsRes = await fetch(`${API_BASE}/api/tts`, { method: 'POST', body: ttsForm });
+                if (!ttsRes.ok) {
+                    const errJson = await ttsRes.json().catch(() => ({}));
+                    throw new Error(`Voice TTS 失敗: ${errJson.error || ttsRes.status}`);
+                }
+
+                const ttsBlob = await ttsRes.blob();
+                const ttsUrl = URL.createObjectURL(ttsBlob);
                 
                 // Final Output
                 statusEl.innerText = "🎉 完美達成！請直接點擊下方播放您的英文專屬語音！";
                 statusEl.classList.add('active');
                 
-                audioPlayback.src = cloneUrl;
+                audioPlayback.src = ttsUrl;
                 playerContainer.style.display = 'block';
-                audioPlayback.play(); // Auto-play the final result
+                audioPlayback.play();
                 
             } catch (err) {
                 console.error(err);

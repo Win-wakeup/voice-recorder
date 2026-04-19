@@ -68,16 +68,28 @@
             document.getElementById('enroll-status').innerText = "狀態：⏳ 正在把檔案放上雲端...";
             try {
                 const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                if(res.ok) {
+                if (!res.ok) throw new Error('upload_failed');
+                
+                // Enroll voice on ElevenLabs
+                document.getElementById('enroll-status').innerText = "狀態：🎙️ 正在建立您的專屬聲音模型...";
+                const enrollForm = new FormData();
+                enrollForm.append('file', blob, 'enrollment.webm');
+                const enrollRes = await fetch('/api/enroll_voice', { method: 'POST', body: enrollForm });
+                const enrollData = await enrollRes.json();
+
+                if (enrollData.voice_id) {
+                    localStorage.setItem('voice_id', enrollData.voice_id);
                     document.getElementById('enroll-status').innerText = "✅ 聲紋提取成功！已完成專屬模型建立。";
-                    localStorage.setItem(`voice_enrolled_${currentUser}`, 'true');
-                    setTimeout(() => window.location.href = `/user/${currentUser}/record`, 2000);
                 } else {
-                    document.getElementById('enroll-status').innerText = "❌ 上傳失敗！";
-                    document.getElementById('enroll-start').style.display = 'flex';
+                    // Enrollment failed but upload succeeded - still allow proceeding
+                    console.warn('Voice enroll warning:', enrollData);
+                    document.getElementById('enroll-status').innerText = "⚠️ 聲音模型建立遇到問題，但仍繼續...";
                 }
+                
+                localStorage.setItem(`voice_enrolled_${currentUser}`, 'true');
+                setTimeout(() => window.location.href = `/user/${currentUser}/record`, 2000);
             } catch (err) {
-                document.getElementById('enroll-status').innerText = "❌ 連線錯誤";
+                document.getElementById('enroll-status').innerText = `❌ 錯誤：${err.message}`;
                 document.getElementById('enroll-start').style.display = 'flex';
             }
         }

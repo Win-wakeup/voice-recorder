@@ -309,43 +309,82 @@ async def end_ride(request: EndRideRequest, background_tasks: BackgroundTasks):
         
     return {"status": "not_found"}
 
-@app.post("/api/clone")
-async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
+@app.post("/api/enroll_voice")
+async def enroll_voice(file: UploadFile = File(...)):
+    """One-time voice enrollment: upload a long audio sample, get back a voice_id."""
     try:
-        # Save Audio to /tmp (important for Vercel Serverless environments)
         filepath = f"/tmp/{file.filename}"
         with open(filepath, "wb") as f:
             f.write(await file.read())
 
-        # Step 1: Upload and clone voice
-        url = "https://api.elevenlabs.io/v1/voices/add"
-        
-        # Ensures no hidden non-ASCII characters
-        clean_api_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
-        headers = {
-            "xi-api-key": clean_api_key
-        }
-        
-        files_upload = {
-            "files": ("audio.webm", open(filepath, "rb"), "audio/webm")
-        }
-        data = {
-            "name": "my_voice_clone"
-        }
-        
-        response1 = requests.post(url, headers=headers, files=files_upload, data=data)
+        el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
+        headers = {"xi-api-key": el_key}
+
+        with open(filepath, "rb") as audio_f:
+            files_upload = {"files": ("voice_sample.webm", audio_f, "audio/webm")}
+            data = {"name": f"user_voice_{int(time.time())}"}
+            resp = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data, timeout=60)
+
+        if resp.status_code != 200:
+            return JSONResponse(status_code=500, content={"error": f"ElevenLabs enroll error: {resp.text}"})
+
+        voice_id = resp.json()["voice_id"]
+        logger.info(f"✅ Voice enrolled: {voice_id}")
+        return {"voice_id": voice_id, "status": "success"}
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@app.post("/api/tts")
+async def text_to_speech(voice_id: str = Form(...), text: str = Form(...)):
+    """Use pre-enrolled voice_id to synthesize speech. No new voice creation."""
+    try:
+        el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
+        headers = {"xi-api-key": el_key}
+
+        tts_url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+        tts_data = {"text": text, "model_id": "eleven_monolingual_v1"}
+
+        resp = requests.post(tts_url, json=tts_data, headers=headers, timeout=30)
+        if resp.status_code != 200:
+            return JSONResponse(status_code=500, content={"error": f"ElevenLabs TTS error: {resp.text}"})
+
+        output_path = "/tmp/tts_output.mp3"
+        with open(output_path, "wb") as f:
+            f.write(resp.content)
+
+        return FileResponse(output_path, media_type="audio/mpeg", filename="output.mp3")
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@app.post("/api/clone")
+async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
+    """Legacy shim: kept for backwards compatibility. Creates a new voice every time."""
+    try:
+        filepath = f"/tmp/{file.filename}"
+        with open(filepath, "wb") as f:
+            f.write(await file.read())
+
+        el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
+        headers = {"xi-api-key": el_key}
+
+        with open(filepath, "rb") as audio_f:
+            files_upload = {"files": ("audio.webm", audio_f, "audio/webm")}
+            data = {"name": "my_voice_clone"}
+            response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
+
         if response1.status_code != 200:
             return JSONResponse(status_code=500, content={"message": f"ElevenLabs Voice Add Error: {response1.text}"})
-        
+
         voice_id = response1.json()["voice_id"]
 
-        # Step 2: Text to Speech
         tts_url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-        tts_data = {
-            "text": text,
-            "model_id": "eleven_monolingual_v1"
-        }
-        
+        tts_data = {"text": text, "model_id": "eleven_monolingual_v1"}
         response2 = requests.post(tts_url, json=tts_data, headers=headers)
         if response2.status_code != 200:
             return JSONResponse(status_code=500, content={"message": f"ElevenLabs TTS Error: {response2.text}"})
@@ -355,7 +394,7 @@ async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
             f.write(response2.content)
 
         return FileResponse(output_path)
-        
+
     except Exception as e:
         traceback.print_exc()
         return JSONResponse(status_code=500, content={"message": str(e)})
