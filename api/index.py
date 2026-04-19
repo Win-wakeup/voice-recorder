@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import requests
 import traceback
 import io
+import re
 import speech_recognition as sr
 
 # ==========================================
@@ -29,6 +30,9 @@ load_dotenv()
 
 # Read ELEVENLABS at module time (not used at module load)
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 
 # ==========================================
 # 1. 架構設定 (Model & Constants)
@@ -173,8 +177,31 @@ def cache_add(text: str, raw: str, final: str):
 # Endpoints
 # ==========================================
 
+def _delete_cloudinary_file(url: str):
+    """Background task: delete a Cloudinary resource by its public URL."""
+    try:
+        import hashlib, hmac, time as _time
+        # Extract public_id from URL: .../upload/[transforms/]v123/folder/filename.ext
+        match = re.search(r'/upload/(?:[^/]+/)*v\d+/(.+?)(?:\.[a-z0-9]+)?$', url, re.IGNORECASE)
+        if not match:
+            return
+        public_id = match.group(1)
+        ts = str(int(_time.time()))
+        sig_str = f"public_id={public_id}&timestamp={ts}{CLOUDINARY_API_SECRET}"
+        signature = hashlib.sha256(sig_str.encode()).hexdigest()
+        requests.post(
+            f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME}/video/destroy",
+            data={"public_id": public_id, "timestamp": ts,
+                  "api_key": CLOUDINARY_API_KEY, "signature": signature},
+            timeout=10
+        )
+        logger.info(f"🗑️ Deleted Cloudinary file: {public_id}")
+    except Exception as e:
+        logger.warning(f"Cloudinary delete skipped: {e}")
+
+
 @app.post("/api/stt")
-async def stt_endpoint(data: AudioRequest):
+async def stt_endpoint(data: AudioRequest, background_tasks: BackgroundTasks):
     # Use Cloudinary URL transformation to convert any audio format (WebM, MP4, AAC) to WAV
     import re
     original_url = data.audio_path
@@ -201,15 +228,20 @@ async def stt_endpoint(data: AudioRequest):
         print("⏳ 正在傳送至 Google 進行辨識...")
         text = recognizer.recognize_google(audio_data, language="zh-TW")
         print(f"✅ 辨識結果：{text}")
+        background_tasks.add_task(_delete_cloudinary_file, original_url)
         return {"text": text, "status": "success"}
     
     except sr.UnknownValueError:
+        background_tasks.add_task(_delete_cloudinary_file, original_url)
         return {"error": "❌ 聽不懂您說的話，請再試一次。", "status": "error"}
     except sr.RequestError:
+        background_tasks.add_task(_delete_cloudinary_file, original_url)
         return {"error": "❌ 無法連線至語音辨識伺服器，請檢查網路。", "status": "error"}
     except ValueError as e:
+        background_tasks.add_task(_delete_cloudinary_file, original_url)
         return {"error": f"Audio file formatting error: {str(e)}", "status": "error"}
     except Exception as e:
+        background_tasks.add_task(_delete_cloudinary_file, original_url)
         return {"error": f"Unexpected error: {str(e)}", "status": "error"}
 
 @app.post("/api/translate")
