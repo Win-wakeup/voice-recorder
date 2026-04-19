@@ -27,13 +27,8 @@ logger = logging.getLogger(__name__)
 # 嘗試載入 .env, 若在 Vercel 則已存在環境變數中
 load_dotenv()
 
-api_keys_env = os.getenv("GEMINI_API_KEY")
+# Read ELEVENLABS at module time (not used at module load)
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
-
-if api_keys_env:
-    genai.configure(api_key=api_keys_env.split(",")[0].strip())
-else:
-    logger.warning("GEMINI API Key not found in environment!")
 
 # ==========================================
 # 1. 架構設定 (Model & Constants)
@@ -80,21 +75,28 @@ system_instruction = (
     '"final_english": "This is the Yehliu Queen\'s Head. Please make sure you have all your belongings with you."}'
 )
 
-if api_keys_env:
+# Lazy-load: model initialized on first request so Vercel env vars are available
+_translator_model = None
+
+def get_translator_model():
+    global _translator_model
+    if _translator_model is not None:
+        return _translator_model
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        logger.warning("GEMINI_API_KEY not found at request time!")
+        return None
+    genai.configure(api_key=api_key.split(",")[0].strip())
     try:
-        translator_model = genai.GenerativeModel(
+        _translator_model = genai.GenerativeModel(
             model_name="gemini-2.5-flash-preview-04-17",
             system_instruction=system_instruction,
-            generation_config={
-                "response_mime_type": "application/json",
-            }
+            generation_config={"response_mime_type": "application/json"},
         )
-        logger.info("Gemini model initialized successfully.")
+        logger.info("Gemini model lazy-initialized successfully.")
     except Exception as e:
         logger.error(f"Failed to initialize Gemini model: {e}")
-        translator_model = None
-else:
-    translator_model = None
+    return _translator_model
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -213,6 +215,7 @@ async def translate_text(request: TranslationRequest, background_tasks: Backgrou
     if not new_text:
         raise HTTPException(status_code=400, detail="Empty text")
 
+    translator_model = get_translator_model()
     if not translator_model:
         logger.warning("Translator model not initialized due to missing API key")
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured")
