@@ -89,7 +89,7 @@ def get_translator_model():
     genai.configure(api_key=api_key.split(",")[0].strip())
     try:
         _translator_model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="gemini-2.5-flash-lite",
             system_instruction=system_instruction,
             generation_config={"response_mime_type": "application/json"},
         )
