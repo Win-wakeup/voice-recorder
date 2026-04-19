@@ -6,10 +6,12 @@ import logging
 from pathlib import Path
 import google.generativeai as genai
 from typing import Dict, List, Any
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import requests
+import traceback
 import io
 import speech_recognition as sr
 
@@ -23,6 +25,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 api_keys_env = os.getenv("GEMINI_API_KEY")
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 
 if api_keys_env:
     genai.configure(api_key=api_keys_env.split(",")[0].strip())
@@ -286,6 +289,44 @@ async def end_ride(request: EndRideRequest, background_tasks: BackgroundTasks):
         return {"status": "exported"}
         
     return {"status": "not_found"}
+
+@app.post("/api/clone")
+async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
+    try:
+        # Save Audio to /tmp (important for Vercel Serverless environments)
+        filepath = f"/tmp/{file.filename}"
+        with open(filepath, "wb") as f:
+            f.write(await file.read())
+
+        url = "https://api.elevenlabs.io/v1/voices/add"
+        clean_api_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
+        headers = {"xi-api-key": clean_api_key}
+        
+        files_upload = {"files": ("audio.webm", open(filepath, "rb"), "audio/webm")}
+        data = {"name": "my_voice_clone"}
+        
+        response1 = requests.post(url, headers=headers, files=files_upload, data=data)
+        if response1.status_code != 200:
+            return JSONResponse(status_code=500, content={"message": f"ElevenLabs Voice Add Error: {response1.text}"})
+        
+        voice_id = response1.json()["voice_id"]
+
+        tts_url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+        tts_data = {"text": text, "model_id": "eleven_monolingual_v1"}
+        
+        response2 = requests.post(tts_url, json=tts_data, headers=headers)
+        if response2.status_code != 200:
+            return JSONResponse(status_code=500, content={"message": f"ElevenLabs TTS Error: {response2.text}"})
+
+        output_path = "/tmp/clone_output.mp3"
+        with open(output_path, "wb") as f:
+            f.write(response2.content)
+
+        return FileResponse(output_path)
+        
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"message": str(e)})
 
 @app.get("/hello_world")
 async def hello_world():
