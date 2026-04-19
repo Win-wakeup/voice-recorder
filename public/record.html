@@ -235,7 +235,10 @@
                 statusEl.innerText = "🌍 步驟 3/4: 分析語意，翻譯成道地英文...";
                 const transReq = await fetch(`${API_BASE}/api/translate`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ride_id: currentUser, text: sttData.text })
+                    body: JSON.stringify({ 
+                        text: sttData.text,
+                        ride_id: currentUser 
+                    })
                 });
                 const transData = await transReq.json();
 
