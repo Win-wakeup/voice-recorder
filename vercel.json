@@ -1,11 +1,11 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/upload", "destination": "/api/upload.js" },
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/register", "destination": "/public/register.html" },
-    { "source": "/user/:id/record", "destination": "/public/record.html" },
-    { "source": "/", "destination": "/public/index.html" },
-    { "source": "/(.*)", "destination": "/public/$1" }
+    { "source": "/api/stt", "destination": "/api/index" },
+    { "source": "/api/translate", "destination": "/api/index" },
+    { "source": "/api/clone", "destination": "/api/index" },
+    { "source": "/api/end_ride", "destination": "/api/index" },
+    { "source": "/register", "destination": "/register" },
+    { "source": "/user/:id/record", "destination": "/record" }
   ]
 }
