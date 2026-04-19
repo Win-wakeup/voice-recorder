@@ -1,11 +1,14 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/api/upload", "destination": "/api/upload.js" },
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/register", "destination": "/public/register.html" },
-    { "source": "/user/:id/record", "destination": "/public/record.html" },
-    { "source": "/", "destination": "/public/index.html" },
-    { "source": "/(.*)", "destination": "/public/$1" }
+  "builds": [
+    { "src": "server.js", "use": "@vercel/node" },
+    { "src": "api/index.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/api/upload", "dest": "/server.js" },
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
+    { "src": "/register", "dest": "/public/register.html" },
+    { "src": "/user/:id/record", "dest": "/public/record.html" },
+    { "src": "/", "dest": "/public/index.html" },
+    { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
