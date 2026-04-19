@@ -272,6 +272,15 @@
                 audioPlayback.src = ttsUrl;
                 playerContainer.style.display = 'block';
                 audioPlayback.play();
+
+                // 🔄 Fire-and-forget: add this recording to the voice model for continuous improvement
+                const sampleForm = new FormData();
+                sampleForm.append('voice_id', savedVoiceId);
+                sampleForm.append('file', blob, 'sample.webm');
+                fetch(`${API_BASE}/api/add_voice_sample`, { method: 'POST', body: sampleForm })
+                    .then(r => r.json())
+                    .then(d => console.log('🎙️ Voice sample added:', d.status))
+                    .catch(e => console.warn('Voice sample add skipped:', e));
                 
             } catch (err) {
                 console.error(err);

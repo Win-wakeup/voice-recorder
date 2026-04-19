@@ -337,6 +337,39 @@ async def enroll_voice(file: UploadFile = File(...)):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 
+@app.post("/api/add_voice_sample")
+async def add_voice_sample(voice_id: str = Form(...), file: UploadFile = File(...)):
+    """Incrementally add a new audio sample to an existing voice model to improve resemblance."""
+    try:
+        filepath = f"/tmp/{file.filename}"
+        with open(filepath, "wb") as f:
+            f.write(await file.read())
+
+        el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
+        headers = {"xi-api-key": el_key}
+
+        with open(filepath, "rb") as audio_f:
+            files_upload = {"files": ("new_sample.webm", audio_f, "audio/webm")}
+            resp = requests.post(
+                f"https://api.elevenlabs.io/v1/voices/{voice_id}/edit",
+                headers=headers,
+                files=files_upload,
+                data={"name": f"user_voice_{voice_id[:8]}"},
+                timeout=60
+            )
+
+        if resp.status_code != 200:
+            logger.warning(f"Voice sample add warning: {resp.text}")
+            return JSONResponse(status_code=200, content={"status": "skipped", "detail": resp.text})
+
+        logger.info(f"✅ Voice sample added to {voice_id}")
+        return {"status": "success", "voice_id": voice_id}
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
 @app.post("/api/tts")
 async def text_to_speech(voice_id: str = Form(...), text: str = Form(...)):
     """Use pre-enrolled voice_id to synthesize speech. No new voice creation."""
