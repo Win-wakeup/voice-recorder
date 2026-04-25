@@ -14,7 +14,6 @@ import subprocess
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import requests
-import traceback
 import io
 import re
 import speech_recognition as sr
@@ -169,7 +168,7 @@ def cache_add(text: str, raw: str, final: str):
         keys_to_delete = [sorted_items[i][0] for i in range(half_size, len(sorted_items))]
         for k in keys_to_delete:
             del translation_cache[k]
-        logger.info(f"🧹 [Cache Cleanup] Cleared {len(keys_to_delete)} low-frequency cache items.")
+        logger.info(f"🧹 [Cache Cleanup] Cleared { len(keys_to_delete) } low-frequency cache items.")
     
     translation_cache[key] = {
         "raw": raw,
@@ -181,60 +180,23 @@ def cache_add(text: str, raw: str, final: str):
 # Endpoints
 # ==========================================
 
-def _delete_cloudinary_file(url: str):
-    """Background task: delete a Cloudinary resource by its public URL."""
-    try:
-        import hashlib, hmac, time as _time
-        # Extract public_id from URL: .../upload/[transforms/]v123/folder/filename.ext
-        match = re.search(r'/upload/(?:[^/]+/)*v\d+/(.+?)(?:\.[a-z0-9]+)?$', url, re.IGNORECASE)
-        if not match:
-            return
-        public_id = match.group(1)
-        ts = str(int(_time.time()))
-        sig_str = f"public_id={public_id}&timestamp={ts}{CLOUDINARY_API_SECRET}"
-        signature = hashlib.sha256(sig_str.encode()).hexdigest()
-        requests.post(
-            f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME}/video/destroy",
-            data={"public_id": public_id, "timestamp": ts,
-                  "api_key": CLOUDINARY_API_KEY, "signature": signature},
-            timeout=10
-        )
-        logger.info(f"🗑️ Deleted Cloudinary file: {public_id}")
-    except Exception as e:
-        logger.warning(f"Cloudinary delete skipped: {e}")
-
-
 @app.post("/api/stt")
-async def stt_endpoint(data: AudioRequest, background_tasks: BackgroundTasks):
-    original_url = data.audio_path
+async def stt_endpoint(audio: UploadFile = File(...)):
     groq_key = os.getenv("GROQ_API_KEY", "")
-
-    # Download raw audio (no format conversion needed - Groq accepts WebM/MP4 directly)
-    try:
-        response = requests.get(original_url, timeout=30)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        return {"error": f"Failed to download audio: {str(e)}", "status": "error"}
-
-    # Auto-delete Cloudinary file after download
-    background_tasks.add_task(_delete_cloudinary_file, original_url)
 
     if not groq_key:
         return {"error": "GROQ_API_KEY not configured", "status": "error"}
 
     try:
-        # Detect file extension from URL for proper MIME type
-        ext = original_url.split('?')[0].rsplit('.', 1)[-1].lower() if '.' in original_url else 'webm'
-        mime_map = {'webm': 'audio/webm', 'mp4': 'audio/mp4', 'm4a': 'audio/mp4',
-                    'mp3': 'audio/mpeg', 'wav': 'audio/wav', 'ogg': 'audio/ogg'}
-        mime = mime_map.get(ext, 'audio/webm')
-        filename = f"audio.{ext}"
+        content = await audio.read()
+        filename = audio.filename or "audio.webm"
+        mime = audio.content_type or "audio/webm"
 
         logger.info(f"⏳ Sending to Groq Whisper ({mime})...")
         groq_resp = requests.post(
             "https://api.groq.com/openai/v1/audio/transcriptions",
             headers={"Authorization": f"Bearer {groq_key}"},
-            files={"file": (filename, response.content, mime)},
+            files={"file": (filename, content, mime)},
             data={"model": "whisper-large-v3-turbo", "language": "zh", "response_format": "text"},
             timeout=60
         )
@@ -247,7 +209,9 @@ async def stt_endpoint(data: AudioRequest, background_tasks: BackgroundTasks):
         return {"text": text, "status": "success"}
 
     except Exception as e:
+        logger.error(f"STT Exception: {e}")
         return {"error": f"Unexpected error: {str(e)}", "status": "error"}
+
 
 @app.post("/api/translate")
 async def translate_text(request: TranslationRequest, background_tasks: BackgroundTasks):
