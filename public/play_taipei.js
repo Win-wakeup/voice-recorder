@@ -1,6 +1,6 @@
 // public/play_taipei.js
 
-let currentMode = "translate"; // 預設模式：純翻譯
+let currentMode = "itinerary"; // 預設模式改為導覽
 let selectedTags = [];
 let isRecording = false;
 let mediaRecorder;
@@ -162,9 +162,14 @@ async function processVoiceData() {
 
     try {
         // [步驟 1] 打給 STT API 轉文字
-        // 備註：請確保後端 /api/stt 寫好並回傳純文字
         const sttRes = await fetch("/api/stt", { method: "POST", body: formData });
-        const userText = await sttRes.text();
+        const sttData = await sttRes.json();
+        
+        if (sttData.status === "error") {
+            throw new Error(sttData.error);
+        }
+        
+        const userText = sttData.text;
         console.log("辨識結果：", userText);
 
         // [步驟 2] 拿 GPS 
@@ -236,12 +241,18 @@ async function processVoiceData() {
 
         // [步驟 5] 拿語音合成並播放
         showStatus("為您語音播報...");
-        // 由於原本的 elevenlabs tts 寫在 /api/tts，我們丟給它生成
+        // 原本的 elevenlabs tts 寫在 /api/tts，要求 FormData，且必須傳入 voice_id 與 text
+        const ttsFormData = new FormData();
+        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); // 固定預設 ElevenLabs Rachel 音色
+        ttsFormData.append("text", llmFinalData.voice_script);
+
         const ttsRes = await fetch("/api/tts", { 
             method: "POST", 
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ text: llmFinalData.voice_script }) 
+            body: ttsFormData 
         });
+        
+        if (!ttsRes.ok) throw new Error("TTS API 錯誤");
+        
         const mp3Blob = await ttsRes.blob();
         const audio = new Audio(URL.createObjectURL(mp3Blob));
         await audio.play();
