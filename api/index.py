@@ -17,6 +17,7 @@ import requests
 import traceback
 import io
 import speech_recognition as sr
+from .routers import play_taipei
 
 # ==========================================
 # 0. Logging & Environment
@@ -109,6 +110,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include Module 2 Routers
+app.include_router(play_taipei.router, prefix="/api/play_taipei", tags=["Play Taipei"])
 
 # --- Memory and Cache for Translation ---
 memory_db: Dict[str, List[Dict[str, Any]]] = {}

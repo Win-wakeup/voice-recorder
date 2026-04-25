@@ -1,0 +1,32 @@
+[
+  {
+    "topic": "寧夏夜市必吃",
+    "sentiment": "positive",
+    "summary": "網友討論寧夏夜市的蛋黃芋餅和豬肝榮仔最近排隊人潮非常多，建議平日晚上去。"
+  },
+  {
+    "topic": "陽明山繡球花",
+    "sentiment": "neutral",
+    "summary": "陽明山竹子湖繡球花季開始了，但假日交通管制嚴重，建議搭乘大眾運輸工具。"
+  },
+  {
+    "topic": "迪化街文青店",
+    "sentiment": "positive",
+    "summary": "大稻埕迪化街出現許多老宅改建的咖啡廳，是年輕人拍照打卡的熱門地點。"
+  },
+  {
+    "topic": "北投溫泉優惠",
+    "sentiment": "positive",
+    "summary": "近期許多溫泉旅館推夏季促銷，雖然天氣轉熱，但冷泉與室內湯屋仍受好評。"
+  },
+  {
+    "topic": "故宮展覽",
+    "sentiment": "positive",
+    "summary": "故宮博物院近期有特別企劃展，館內冷氣強，是避暑的好去處。"
+  },
+  {
+    "topic": "士林夜市負評",
+    "sentiment": "negative",
+    "summary": "有部分遊客抱怨士林夜市物價過高，建議點餐前先確認價格。"
+  }
+]
