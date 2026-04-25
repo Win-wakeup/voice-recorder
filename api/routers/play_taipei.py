@@ -51,6 +51,7 @@ class QueryResponse(BaseModel):
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+TTS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "zrHiDhphv9ZnVXBqCLjz") # 從環境變數讀取，預設為 Mimi
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY.split(",")[0].strip())
@@ -71,6 +72,31 @@ def load_json(path):
 
 TAIPEI_DICT = load_json(DICT_PATH)
 SOCIAL_SENTIMENT = load_json(SENTIMENT_PATH)
+
+# --- 優化點 1: 預先建立模型與指令模板 ---
+SYSTEM_INSTRUCTION_TEMPLATE = (
+    "你是一名台灣雙語導遊，口氣熱情熱心。\n"
+    "你必須根據使用者提問、參考景點、今日社交熱門話題來回答。\n"
+    "回覆必須是嚴格的 JSON 格式。\n"
+    "JSON Schema 如下：\n"
+    "{\n"
+    "  \"translation\": {\"zh\": \"中文翻譯\", \"en\": \"英文翻譯\"},\n"
+    "  \"voice_script\": \"導遊的口說台詞，要自然且包含推薦原因\",\n"
+    "  \"itinerary\": [\n"
+    "    {\"name\": \"景點名稱\", \"description\": \"景點簡介\", \"address\": \"地址(若知)\", \"image_url\": \"圖片URL(留空)\"}\n"
+    "  ]\n"
+    "}\n"
+    "規則：\n"
+    "1. 如果使用者只是在寒暄，itinerary 可以是空陣列。\n"
+    "2. translation 欄位：請自動偵測使用者輸入的語言。如果輸入是中文，zh 欄位保留原文，並將其翻譯成英文填入 en 欄位；如果輸入是英文，en 欄位保留原文，並將其翻譯成中文填入 zh 欄位。\n"
+    "3. 參考景點：{poi_str}\n"
+    "4. 今日社群話題：\n{social_context}\n"
+)
+
+GUIDE_MODEL = genai.GenerativeModel(
+    model_name="gemini-2.5-flash-lite",
+    generation_config={"response_mime_type": "application/json"}
+) if GEMINI_API_KEY else None
 
 # ==========================================
 # 3. Helpers
@@ -152,28 +178,9 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         # 3. 建立 Prompt
         poi_str = ", ".join([p['name'] for p in best_pois]) if best_pois else "無推薦景點"
         
-        system_instruction = (
-            "你是一名台灣雙語導遊，口氣熱情熱心。\n"
-            "你必須根據使用者提問、參考景點、今日社交熱門話題來回答。\n"
-            "回覆必須是嚴格的 JSON 格式。\n"
-            "JSON Schema 如下：\n"
-            "{\n"
-            "  \"translation\": {\"zh\": \"中文翻譯\", \"en\": \"英文翻譯\"},\n"
-            "  \"voice_script\": \"導遊的口說台詞，要自然且包含推薦原因\",\n"
-            "  \"itinerary\": [\n"
-            "    {\"name\": \"景點名稱\", \"description\": \"景點簡介\", \"address\": \"地址(若知)\", \"image_url\": \"圖片URL(留空)\"}\n"
-            "  ]\n"
-            "}\n"
-            "規則：\n"
-            "1. 如果使用者只是在寒暄，itinerary 可以是空陣列。\n"
-            "2. translation 欄位：請自動偵測使用者輸入的語言。如果輸入是中文，zh 欄位保留原文，並將其翻譯成英文填入 en 欄位；如果輸入是英文，en 欄位保留原文，並將其翻譯成中文填入 zh 欄位。\n"
-            f"3. 參考景點：{poi_str}\n"
-            f"4. 今日社群話題：\n{social_context}\n"
-        )
-        
-        model = genai.GenerativeModel(
-            model_name="gemini-2.5-flash-lite",
-            generation_config={"response_mime_type": "application/json"}
+        # --- 優化點 2: 使用模板格式化指令 ---
+        system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(
+            poi_str=poi_str, social_context=social_context
         )
         
         # 組合歷史與當前問題
@@ -185,7 +192,11 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         full_prompt = "\n".join(prompt_parts)
         
         # 4. 呼叫 Gemini
-        response = model.generate_content(full_prompt)
+        if not GUIDE_MODEL:
+            raise HTTPException(status_code=500, detail="Gemini API key not configured.")
+            
+        # --- 優化點 3: 使用共用的模型實例 ---
+        response = GUIDE_MODEL.generate_content(full_prompt)
         ai_raw_response = response.text
         
         try:
@@ -214,11 +225,6 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
             # 參考: https://elevenlabs.io/docs/speech-synthesis/models
             TTS_MODEL_ID = "eleven_multilingual_v2"
             
-            # 這是一個常見的範例語音 ID ("Rachel")。
-            # 在正式環境中，您應該換成您自己 ElevenLabs 帳戶中的語音 ID。
-            # 您可以透過 /v1/voices API 端點來列出您可用的語音。
-            TTS_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"
-            
             tts_api_url = f"https://api.elevenlabs.io/v1/text-to-speech/{TTS_VOICE_ID}"
             
             headers = {
@@ -231,8 +237,10 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
                 "text": voice_script,
                 "model_id": TTS_MODEL_ID,
                 "voice_settings": {
-                    "stability": 0.5,
-                    "similarity_boost": 0.75
+                    "stability": 0.5, # 穩定性，數值越高聲音越單調穩定
+                    "similarity_boost": 0.5, # 【解決方案】降低相似度，讓模型專注於生成自然的中文語調，而非模仿原聲
+                    "style": 0.1, # 風格誇張度，設低一點讓語氣更平實
+                    "use_speaker_boost": True # 推薦開啟，能增強聲音的清晰度
                 }
             }
             
