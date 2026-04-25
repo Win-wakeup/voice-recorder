@@ -22,15 +22,6 @@
             transition: all 0.3s;
             border: 2px solid transparent;
         }
-        .btn-play {
-            background-color: #2563eb;
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-        }
-        .btn-play:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-        }
         .btn-safe {
             background-color: #10b981;
             color: white;
@@ -38,6 +29,24 @@
         }
         .btn-safe:hover {
             background-color: #059669;
+            transform: translateY(-2px);
+        }
+        .btn-translate {
+            background-color: #8b5cf6;
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        .btn-translate:hover {
+            background-color: #7c3aed;
+            transform: translateY(-2px);
+        }
+        .btn-play {
+            background-color: #2563eb;
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        .btn-play:hover {
+            background-color: #1d4ed8;
             transform: translateY(-2px);
         }
         .view {
@@ -76,8 +85,12 @@
                 🏨 住宿安全警示 (Safe Stay)
             </a>
             
+            <a href="/translate.html" class="module-btn btn-translate">
+                🌍 AI 即時雙向翻譯 (Translation)
+            </a>
+
             <a href="/play_taipei.html" class="module-btn btn-play">
-                🎒 音為台北導覽 (Voice of Taipei)
+                🗺️ AI 在地嚮導 (Play Taipei)
             </a>
 
             <button class="logout-link" onclick="logout()">登出</button>

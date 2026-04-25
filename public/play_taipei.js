@@ -1,32 +1,8 @@
 // public/play_taipei.js
-
-let currentMode = "itinerary"; // 預設模式改為導覽
 let selectedTags = [];
 let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
-
-// --- UI 切換邏輯 ---
-function switchMode(mode) {
-    currentMode = mode;
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`tab-${mode}`).classList.add('active');
-    
-    // UI 清空避免跨頁籤誤會
-    document.getElementById('subtitle-board').style.display = 'none';
-    document.getElementById('itinerary-display').innerHTML = '';
-    document.getElementById('status-text').innerText = mode === "itinerary" ? "想去哪裡？按住麥克風告訴我！" : "純翻譯：請按住麥克風說話...";
-    
-    const tagsSection = document.getElementById('tags-section');
-    if (mode === 'itinerary') {
-        tagsSection.style.display = 'block';
-    } else {
-        tagsSection.style.display = 'none';
-        // 清空選擇的 Tags
-        selectedTags = [];
-        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('selected'));
-    }
-}
 
 function toggleTag(btnElement, tagValue) {
     btnElement.classList.toggle('selected');
@@ -45,10 +21,10 @@ function setMicState(active) {
     const btn = document.getElementById('record-button');
     if (active) {
         btn.classList.add('recording-pulse');
-        btn.style.backgroundColor = "#ef4444"; // Red when recording
+        btn.style.backgroundColor = "#ef4444"; 
     } else {
         btn.classList.remove('recording-pulse');
-        btn.style.backgroundColor = "#2563eb"; // Blue normal
+        btn.style.backgroundColor = "#2563eb"; 
     }
 }
 
@@ -61,7 +37,7 @@ function getCurrentGPS() {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
             console.warn("瀏覽器不支援 GPS");
-            resolve({ lat: 25.0330, lng: 121.5654 }); // 預設 101 座標
+            resolve({ lat: 25.0330, lng: 121.5654 }); 
         } else {
             navigator.geolocation.getCurrentPosition(
                 position => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
@@ -78,16 +54,13 @@ function getCurrentGPS() {
 // --- 渲染時間軸卡片 ---
 function renderTimeline(itineraryArray, originCoords) {
     const container = document.getElementById('itinerary-display');
-    container.innerHTML = ''; // 清空舊資料
+    container.innerHTML = ''; 
     
     if (!itineraryArray || itineraryArray.length === 0) return;
 
     let htmlStr = '<div class="timeline">';
-    
     itineraryArray.forEach((poi, index) => {
-        // 利用 Google Maps Dir API 產生帶目前座標的交通路徑連結
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originCoords.lat},${originCoords.lng}&destination=${encodeURIComponent(poi.name)}&travelmode=transit`;
-        
         htmlStr += `
         <div class="timeline-item" style="animation-delay: ${index * 0.2}s">
             <div class="timeline-dot"></div>
@@ -101,14 +74,12 @@ function renderTimeline(itineraryArray, originCoords) {
             </div>
         </div>`;
     });
-    
     htmlStr += '</div>';
     container.innerHTML = htmlStr;
 }
 
-// Helper: 避免沒填時間時出現 undedefined
 function POI_Time_String(poi) {
-    return poi.time_suggested || poi.time || "現在出發";
+    return poi.time_suggested || poi.time || "推薦";
 }
 
 function renderSubtitles(translationObj) {
@@ -119,7 +90,7 @@ function renderSubtitles(translationObj) {
     document.getElementById('sub-en').innerText = translationObj.en || "";
 }
 
-// --- 核心音訊錄製與微服務連鎖打點 (The Orchestrator) ---
+// --- 核心音訊錄製與微服務連鎖打點 ---
 document.getElementById('record-button').addEventListener('mousedown', startRecording);
 document.getElementById('record-button').addEventListener('mouseup', stopRecording);
 document.getElementById('record-button').addEventListener('touchstart', startRecording);
@@ -144,7 +115,6 @@ async function startRecording(e) {
         setMicState(true);
         showStatus("聽您說話中...");
         
-        // 隱藏舊看板
         document.getElementById('subtitle-board').style.display = 'none';
         document.getElementById('itinerary-display').innerHTML = '';
     } catch (err) {
@@ -161,7 +131,6 @@ function stopRecording(e) {
     setMicState(false);
 }
 
-// 核心五步驟 非同步調度
 async function processVoiceData() {
     toggleMicButton(false);
     showStatus("AI 處理中...");
@@ -171,7 +140,6 @@ async function processVoiceData() {
     formData.append("audio", audioBlob, "recording.webm");
 
     try {
-        // [步驟 1] 打給 STT API 轉文字
         const sttRes = await fetch("/api/stt", { method: "POST", body: formData });
         const sttData = await sttRes.json();
         
@@ -182,84 +150,54 @@ async function processVoiceData() {
         const userText = sttData.text;
         console.log("辨識結果：", userText);
 
-        // [步驟 2] 拿 GPS 
         showStatus("定位中...");
         const gpsCoords = await getCurrentGPS();
         const currentTime = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, '0');
 
-        let llmFinalData = {};
+        showStatus("載入即時情境與社群情報...");
+        const contextResToB = await fetch("/api/fetch_context", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                time: currentTime, 
+                weather: "晴天" 
+            })
+        });
+        const dataB = await contextResToB.json();
+        const validPois = dataB.valid_pois || [];
+        const trending = dataB.social_trends || [];
 
-        if (currentMode === "translate") {
-            showStatus("即時翻譯中...");
-            const currentUserId = "dino"; 
-            
-            // 打原本的翻譯 API
-            const transRes = await fetch("/api/translate", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    ride_id: currentUserId,
-                    text: userText
-                })
-            });
-            const transData = await transRes.json();
-            
-            llmFinalData.translation = { zh: transData.original_zh || userText, en: transData.final_english };
-            llmFinalData.voice_script = transData.final_english;
-            llmFinalData.itinerary = [];
-            
-        } else if (currentMode === "itinerary") {
-            // [步驟 2-b] 若為導覽模式，先去問隊友 B 的過濾清單
-            showStatus("載入即時情境與社群情報...");
-            
-            // 呼叫隊友 B 寫好的過濾引擎 API
-            const contextResToB = await fetch("/api/fetch_context", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    time: currentTime, 
-                    weather: "晴天" 
-                })
-            });
-            const dataB = await contextResToB.json();
-            const validPois = dataB.valid_pois || [];
-            const trending = dataB.social_trends || [];
+        showStatus("AI 規劃行程中...");
+        const currentUserId = "dino"; 
+        
+        const llmResToA = await fetch("/api/play_taipei/query", {
+            method: "POST", headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                user_text: userText, 
+                tags: selectedTags,
+                session_id: currentUserId,
+                context: { 
+                    lat: gpsCoords.lat, 
+                    lng: gpsCoords.lng, 
+                    current_time: currentTime, 
+                    weather: "Sunny" 
+                }
+            })
+        });
+        const llmFinalData = await llmResToA.json();
 
-            // [步驟 3] 呼叫大腦 (隊友 A)：獲取 JSON
-            showStatus("AI 規劃行程中...");
-            const currentUserId = "dino"; 
-            
-            const llmResToA = await fetch("/api/play_taipei/query", {
-                method: "POST", headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    user_text: userText, 
-                    tags: selectedTags,
-                    session_id: currentUserId,
-                    context: { 
-                        lat: gpsCoords.lat, 
-                        lng: gpsCoords.lng, 
-                        current_time: currentTime, 
-                        weather: "Sunny" 
-                    }
-                })
-            });
-            llmFinalData = await llmResToA.json();
-
-            if (!llmFinalData || llmFinalData.status === "error") {
-                throw new Error("大腦運算失敗：" + (llmFinalData.detail || ""));
-            }
+        if (!llmFinalData || llmFinalData.status === "error" || llmFinalData.detail) {
+            throw new Error("大腦運算失敗：" + (llmFinalData.detail || ""));
         }
 
-        // [步驟 4] 前端渲染字幕與卡片
         renderSubtitles(llmFinalData.translation);
         if (llmFinalData.itinerary && llmFinalData.itinerary.length > 0) {
             renderTimeline(llmFinalData.itinerary, gpsCoords);
         }
 
-        // [步驟 5] 拿語音合成並播放 (只對英文發音)
         showStatus("為您語音播報...");
         const ttsFormData = new FormData();
-        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); // 固定預設 ElevenLabs Rachel 音色
+        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); 
         ttsFormData.append("text", llmFinalData.voice_script || llmFinalData.translation.en || "");
 
         const ttsRes = await fetch("/api/tts", { 
@@ -276,7 +214,7 @@ async function processVoiceData() {
         const audio = new Audio(URL.createObjectURL(mp3Blob));
         await audio.play();
         
-        showStatus(currentMode === "itinerary" ? "導覽完畢！有問題隨時問我！" : "翻譯成功！請說下一句...");
+        showStatus("導覽完畢！有問題隨時問我！");
 
     } catch (e) {
         console.error(e);
@@ -285,8 +223,3 @@ async function processVoiceData() {
         toggleMicButton(true);
     }
 }
-
-// 初始化 UI 狀態
-window.addEventListener('DOMContentLoaded', () => {
-    switchMode('itinerary');
-});

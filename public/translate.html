@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音為台北 - AI 即時翻譯</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .subtitle-board {
+            margin-top: 30px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .lang-source { font-size: 1.4rem; margin-bottom: 20px;}
+        .lang-translated { font-size: 1.8rem; color: #8b5cf6;}
+    </style>
+</head>
+<body>
+    <div class="container play-taipei-container">
+        
+        <!-- 頂部 Navbar / 返回鍵 / 登出鍵 -->
+        <div class="header-nav">
+            <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> 返回</a>
+            <h2>AI 即時雙向翻譯</h2>
+            <button class="back-btn" onclick="logout()" style="margin-left: 10px; margin-right: 0; outline: none; border: none; cursor: pointer; font-size: 0.95rem;">登出</button>
+        </div>
+
+        <!-- 雙向翻譯字幕看板 -->
+        <div id="subtitle-board" class="subtitle-board glass-panel">
+            <div class="lang-source" id="sub-zh">請按住下方麥克風說話...</div>
+            <div class="lang-translated" id="sub-en">Hold the mic below to speak...</div>
+        </div>
+
+        <!-- 全局狀態提示文字 -->
+        <div id="status-text" class="status-text">想翻譯什麼？按住麥克風告訴我！</div>
+
+        <!-- 巨型錄音按鈕區塊 -->
+        <div class="mic-container" style="margin-top: 80px;">
+            <button id="record-button" class="record-button" style="background-color: #8b5cf6;">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="translate.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUserName');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
