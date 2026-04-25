@@ -3,70 +3,63 @@ let selectedTags = [];
 let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
+let currentTTSAudio = null; // 儲存目前正在播放的音訊
 
 function toggleTag(btnElement, tagValue) {
-    btnElement.classList.toggle('selected');
-    if (btnElement.classList.contains('selected')) {
-        selectedTags.push(tagValue);
-    } else {
-        selectedTags = selectedTags.filter(t => t !== tagValue);
-    }
+    btnElement.classList.toggle("selected");
+    if (btnElement.classList.contains("selected")) selectedTags.push(tagValue);
+    else selectedTags = selectedTags.filter(t => t !== tagValue);
 }
 
 function showStatus(text) {
-    document.getElementById('status-text').innerText = text;
+    document.getElementById("status-text").innerText = text;
 }
 
 function setMicState(active) {
-    const btn = document.getElementById('record-button');
+    const btn = document.getElementById("record-button");
     if (active) {
-        btn.classList.add('recording-pulse');
+        btn.classList.add("recording-pulse");
         btn.style.backgroundColor = "#ef4444"; 
     } else {
-        btn.classList.remove('recording-pulse');
-        btn.style.backgroundColor = "#2563eb"; 
+        btn.classList.remove("recording-pulse");
+        btn.style.backgroundColor = ""; 
     }
 }
 
 function toggleMicButton(enabled) {
-    document.getElementById('record-button').disabled = !enabled;
+    document.getElementById("record-button").disabled = !enabled;
+    document.getElementById("send-btn").disabled = !enabled;
+    document.getElementById("text-input").disabled = !enabled;
 }
 
 // --- GPS 獲取邏輯 ---
 function getCurrentGPS() {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
-            console.warn("瀏覽器不支援 GPS");
             resolve({ lat: 25.0330, lng: 121.5654 }); 
         } else {
             navigator.geolocation.getCurrentPosition(
                 position => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
-                error => {
-                    console.warn("GPS 獲取失敗，使用預設座標", error);
-                    resolve({ lat: 25.0330, lng: 121.5654 });
-                },
+                error => resolve({ lat: 25.0330, lng: 121.5654 }),
                 { timeout: 5000 }
             );
         }
     });
 }
 
-// --- 渲染時間軸卡片 ---
-function renderTimeline(itineraryArray, originCoords) {
-    const container = document.getElementById('itinerary-display');
-    container.innerHTML = ''; 
-    
-    if (!itineraryArray || itineraryArray.length === 0) return;
-
-    let htmlStr = '<div class="timeline">';
+// --- 小工具：產出行程卡片的 HTML ---
+function extractTimelineHTML(itineraryArray, originCoords) {
+    if (!itineraryArray || itineraryArray.length === 0) return "";
+    let htmlStr = `<div class="timeline" style="margin-top: 15px;">`;
     itineraryArray.forEach((poi, index) => {
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originCoords.lat},${originCoords.lng}&destination=${encodeURIComponent(poi.name)}&travelmode=transit`;
+        const timeTag = poi.time || "推薦";
         htmlStr += `
         <div class="timeline-item" style="animation-delay: ${index * 0.2}s">
             <div class="timeline-dot"></div>
             <div class="timeline-line"></div>
-            <div class="timeline-content glass-panel">
-                <h3>${poi.name} <span class="time-tag">${POI_Time_String(poi)}</span></h3>
+            <div class="timeline-content glass-panel" style="background: rgba(255,255,255,0.7);">
+                <h3 style="margin-top:0;">${poi.name} <span class="time-tag">${timeTag}</span></h3>
                 <p class="ai-reason"><i class="fas fa-sparkles"></i> ${poi.description}</p>
                 <a class="nav-btn" href="${mapsUrl}" target="_blank">
                      <i class="fas fa-subway"></i> 出發導航
@@ -74,52 +67,166 @@ function renderTimeline(itineraryArray, originCoords) {
             </div>
         </div>`;
     });
-    htmlStr += '</div>';
-    container.innerHTML = htmlStr;
+    htmlStr += "</div>";
+    return htmlStr;
 }
 
-function POI_Time_String(poi) {
-    return poi.time_suggested || poi.time || "推薦";
+// --- 附加氣泡到對話框 ---
+function appendChatBubble(role, contentHTML) {
+    const container = document.getElementById("chat-history");
+    const div = document.createElement("div");
+    if (role === "user") {
+        div.className = "chat-bubble user-bubble";
+        div.innerHTML = `<i class="fas fa-user"></i> ${contentHTML}`;
+    } else {
+        div.className = "chat-bubble ai-bubble";
+        div.innerHTML = `<i class="fas fa-robot"></i> ${contentHTML}`;
+    }
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
 }
 
-function renderSubtitles(translationObj) {
-    if (!translationObj) return;
-    const board = document.getElementById('subtitle-board');
-    board.style.display = 'block';
-    document.getElementById('sub-zh').innerText = translationObj.zh || "";
-    document.getElementById('sub-en').innerText = translationObj.en || "";
+// --- 音頻控制 ---
+document.getElementById("audio-control-btn").addEventListener("click", () => {
+    if (currentTTSAudio) {
+        if (!currentTTSAudio.paused) {
+            currentTTSAudio.pause();
+            document.getElementById("audio-control-btn").innerHTML = '<i class="fas fa-play-circle"></i>';
+        } else {
+            currentTTSAudio.play();
+            document.getElementById("audio-control-btn").innerHTML = '<i class="fas fa-pause-circle"></i>';
+        }
+    }
+});
+
+// --- 核心處理管線 ---
+async function handleUserInput(userText) {
+    toggleMicButton(false);
+    appendChatBubble("user", userText);
+    document.getElementById("text-input").value = "";
+    
+    // 中斷前一個音訊
+    if (currentTTSAudio && !currentTTSAudio.paused) {
+        currentTTSAudio.pause();
+    }
+    document.getElementById("audio-control-btn").style.display = "none";
+    
+    const loadingId = "load-" + Date.now();
+    appendChatBubble("ai", `<span id="${loadingId}">思考中... <i class="fas fa-spinner fa-spin"></i></span>`);
+
+    try {
+        const gpsCoords = await getCurrentGPS();
+        const currentTime = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, "0");
+        const currentUserId = localStorage.getItem("currentUser") || "dino"; 
+        
+        const llmResToA = await fetch("/api/play_taipei/query", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                user_text: userText, 
+                tags: selectedTags,
+                session_id: currentUserId,
+                context: { 
+                    lat: gpsCoords.lat, lng: gpsCoords.lng, 
+                    current_time: currentTime, weather: "Sunny" 
+                }
+            })
+        });
+        const llmFinalData = await llmResToA.json();
+
+        if (!llmFinalData || llmFinalData.status === "error" || llmFinalData.detail) {
+            throw new Error("大腦運算失敗：" + (llmFinalData.detail || ""));
+        }
+
+        const voiceScript = llmFinalData.voice_script || "好的，請參考以下資訊。";
+        const itineraryHtml = extractTimelineHTML(llmFinalData.itinerary, gpsCoords);
+        
+        const answerBlock = document.getElementById(loadingId);
+        if(answerBlock) {
+            answerBlock.parentElement.innerHTML = `<i class="fas fa-robot"></i> ${voiceScript} ${itineraryHtml}`;
+        }
+        
+        // 渲染外部分隔雙語字幕 (可選保留)
+        const board = document.getElementById("subtitle-board");
+        if(llmFinalData.translation && llmFinalData.translation.en) {
+            board.style.display = "block";
+            document.getElementById("sub-zh").innerText = llmFinalData.translation.zh || userText;
+            document.getElementById("sub-en").innerText = llmFinalData.translation.en || "";
+        }
+
+        // 調用獨立 TTS (前端發動)
+        showStatus("準備語音中...");
+        const ttsFormData = new FormData();
+        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); 
+        ttsFormData.append("text", voiceScript);
+
+        const ttsRes = await fetch("/api/tts", { 
+            method: "POST", 
+            body: ttsFormData 
+        });
+        
+        if (ttsRes.ok) {
+            const mp3Blob = await ttsRes.blob();
+            currentTTSAudio = new Audio(URL.createObjectURL(mp3Blob));
+            currentTTSAudio.play();
+            
+            document.getElementById("audio-control-btn").style.display = "inline-block";
+            document.getElementById("audio-control-btn").innerHTML = '<i class="fas fa-pause-circle"></i>';
+            
+            currentTTSAudio.onended = () => {
+                document.getElementById("audio-control-btn").style.display = "none";
+            };
+        }
+        showStatus("想去哪裡玩？打字或按住麥克風告訴我！");
+
+    } catch (e) {
+        console.error(e);
+        const answerBlock = document.getElementById(loadingId);
+        if(answerBlock) answerBlock.innerText = "發生異常：" + e.message;
+        showStatus("發生異常");
+    } finally {
+        toggleMicButton(true);
+        // scroll to bottom again
+        const container = document.getElementById("chat-history");
+        container.scrollTop = container.scrollHeight;
+    }
 }
 
-// --- 核心音訊錄製與微服務連鎖打點 ---
-document.getElementById('record-button').addEventListener('mousedown', startRecording);
-document.getElementById('record-button').addEventListener('mouseup', stopRecording);
-document.getElementById('record-button').addEventListener('touchstart', startRecording);
-document.getElementById('record-button').addEventListener('touchend', stopRecording);
+// --- 文字輸入綁定 ---
+document.getElementById("send-btn").addEventListener("click", () => {
+    const txt = document.getElementById("text-input").value.trim();
+    if(txt) handleUserInput(txt);
+});
+document.getElementById("text-input").addEventListener("keypress", (e) => {
+    if(e.key === "Enter") {
+        const txt = document.getElementById("text-input").value.trim();
+        if(txt) handleUserInput(txt);
+    }
+});
+
+// --- 語音輸入邏輯 ---
+document.getElementById("record-button").addEventListener("mousedown", startRecording);
+document.getElementById("record-button").addEventListener("mouseup", stopRecording);
+document.getElementById("record-button").addEventListener("touchstart", startRecording);
+document.getElementById("record-button").addEventListener("touchend", stopRecording);
 
 async function startRecording(e) {
     e.preventDefault();
     if(isRecording) return;
-    
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
         audioChunks = [];
-        
         mediaRecorder.ondataavailable = event => {
             if (event.data.size > 0) audioChunks.push(event.data);
         };
-        
         mediaRecorder.onstop = processVoiceData;
         mediaRecorder.start();
         isRecording = true;
         setMicState(true);
         showStatus("聽您說話中...");
-        
-        document.getElementById('subtitle-board').style.display = 'none';
-        document.getElementById('itinerary-display').innerHTML = '';
+        if (currentTTSAudio && !currentTTSAudio.paused) currentTTSAudio.pause();
     } catch (err) {
-        console.error("無法存取麥克風", err);
-        showStatus("麥克風授權失敗：" + err.message);
+        showStatus("麥克風授權失敗");
     }
 }
 
@@ -133,105 +240,25 @@ function stopRecording(e) {
 
 async function processVoiceData() {
     toggleMicButton(false);
-    showStatus("AI 處理中...");
-    
-    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-
-    // ✨ Cleanup microphone stream track to free hardware
+    showStatus("AI 處理音訊中...");
+    const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
     if (mediaRecorder && mediaRecorder.stream) {
         mediaRecorder.stream.getTracks().forEach(track => track.stop());
     }
-
     if (audioBlob.size < 1000) {
-        showStatus("錄音時間太短，請按住重新說話！");
+        showStatus("錄音時間太短！");
         toggleMicButton(true);
         return;
     }
-
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.webm");
-
     try {
         const sttRes = await fetch("/api/stt", { method: "POST", body: formData });
         const sttData = await sttRes.json();
-        
-        if (sttData.status === "error") {
-            throw new Error("STT 語音辨識失敗：" + (sttData.error || "未知錯誤"));
-        }
-        
-        const userText = sttData.text;
-        console.log("辨識結果：", userText);
-
-        showStatus("定位中...");
-        const gpsCoords = await getCurrentGPS();
-        const currentTime = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, '0');
-
-        showStatus("載入即時情境與社群情報...");
-        const contextResToB = await fetch("/api/fetch_context", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                time: currentTime, 
-                weather: "晴天" 
-            })
-        });
-        const dataB = await contextResToB.json();
-        const validPois = dataB.valid_pois || [];
-        const trending = dataB.social_trends || [];
-
-        showStatus("AI 規劃行程中...");
-        const currentUserId = "dino"; 
-        
-        const llmResToA = await fetch("/api/play_taipei/query", {
-            method: "POST", headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                user_text: userText, 
-                tags: selectedTags,
-                session_id: currentUserId,
-                context: { 
-                    lat: gpsCoords.lat, 
-                    lng: gpsCoords.lng, 
-                    current_time: currentTime, 
-                    weather: "Sunny" 
-                }
-            })
-        });
-        const llmFinalData = await llmResToA.json();
-
-        if (!llmFinalData || llmFinalData.status === "error" || llmFinalData.detail) {
-            throw new Error("大腦運算失敗：" + (llmFinalData.detail || ""));
-        }
-
-        renderSubtitles(llmFinalData.translation);
-        if (llmFinalData.itinerary && llmFinalData.itinerary.length > 0) {
-            renderTimeline(llmFinalData.itinerary, gpsCoords);
-        }
-
-        showStatus("為您語音播報...");
-        const ttsFormData = new FormData();
-        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); 
-        ttsFormData.append("text", llmFinalData.voice_script || llmFinalData.translation.en || "");
-
-        const ttsRes = await fetch("/api/tts", { 
-            method: "POST", 
-            body: ttsFormData 
-        });
-        
-        if (!ttsRes.ok) {
-            const errBody = await ttsRes.text();
-            throw new Error(`TTS API 錯誤 (${ttsRes.status}): ${errBody}`);
-        }
-        
-        const mp3Blob = await ttsRes.blob();
-        const audio = new Audio(URL.createObjectURL(mp3Blob));
-        await audio.play();
-        
-        showStatus("導覽完畢！有問題隨時問我！");
-
+        if (sttData.status === "error") throw new Error("STT 失敗");
+        handleUserInput(sttData.text);
     } catch (e) {
-        console.error(e);
-        showStatus("發生異常：" + e.message);
-    } finally {
+        showStatus("文字轉換失敗");
         toggleMicButton(true);
     }
 }

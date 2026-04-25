@@ -6,65 +6,114 @@
     <title>音為台北 - AI 語音導覽</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css?v=4">
-    <!-- 加入 FontAwesome 供 icon 使用 -->
+    <link rel="stylesheet" href="/styles.css?v=5">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-history {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 50vh;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .chat-bubble {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        .user-bubble {
+            background: rgba(139, 92, 246, 0.2);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-bubble {
+            background: rgba(255, 255, 255, 0.4);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 8px 12px;
+            border-radius: 30px;
+        }
+        .chat-text-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 24px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+        }
+        .chat-text-input:focus {
+            border-color: #8b5cf6;
+        }
+        .send-btn {
+            background: transparent;
+            color: #8b5cf6;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .audio-control-btn {
+            background: transparent;
+            color: #ef4444;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container play-taipei-container">
         
-        <!-- 頂部 Navbar / 返回鍵 / 登出鍵 -->
         <div class="header-nav">
             <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> 返回</a>
             <h2>AI 在地嚮導</h2>
             <button class="back-btn" onclick="logout()" style="margin-left: 10px; margin-right: 0; outline: none; border: none; cursor: pointer; font-size: 0.95rem;">登出</button>
         </div>
 
-        <!-- 導覽模式特有：情境標籤區 -->
-        <div id="tags-section" class="tags-section">
-            <p class="section-title">您偏好的行程風格？(可複選)</p>
-            <div class="tags-container">
-                <button class="tag-btn" onclick="toggleTag(this, '在地美食')">🍜 在地美食</button>
-                <button class="tag-btn" onclick="toggleTag(this, '商圈購物')">🛍️ 商圈購物</button>
-                <button class="tag-btn" onclick="toggleTag(this, '熱門打卡')">📸 熱門打卡</button>
-                <button class="tag-btn" onclick="toggleTag(this, '文青散策')">☕ 文青散策</button>
-                <button class="tag-btn" onclick="toggleTag(this, '室內展覽')">🖼️ 室內展覽</button>
-                <button class="tag-btn" onclick="toggleTag(this, '自然戶外')">🌲 自然戶外</button>
-                <button class="tag-btn" onclick="toggleTag(this, '歷史古蹟')">⛩️ 歷史古蹟</button>
-                <button class="tag-btn" onclick="toggleTag(this, '親子體驗')">👨‍👩‍👧 親子體驗</button>
-                <button class="tag-btn" onclick="toggleTag(this, '室內娛樂')">🎳 室內娛樂</button>
+        <div id="tags-section" class="tags-section" style="display: none;"></div>
+
+        <!-- Chat History -->
+        <div id="chat-history" class="chat-history">
+            <div class="chat-bubble ai-bubble glass-panel">
+                <i class="fas fa-robot"></i> 你好！我是您的 AI 在地嚮導，今天要幫您安排什麼行程呢？
             </div>
         </div>
 
-        <!-- 雙向翻譯字幕看板 -->
-        <div id="subtitle-board" class="subtitle-board glass-panel" style="display: none;">
-            <div class="lang-source" id="sub-zh"></div>
-            <div class="lang-translated" id="sub-en"></div>
-        </div>
-
-        <!-- 垂直時間軸展演區 -->
-        <div id="itinerary-display" class="itinerary-display">
-            <!-- JS 動態插入點 -->
-        </div>
-
         <!-- 全局狀態提示文字 -->
-        <div id="status-text" class="status-text">想去哪裡玩？按住麥克風告訴我！</div>
+        <div id="status-text" class="status-text">想去哪裡玩？打字或按住麥克風告訴我！</div>
 
-        <!-- 巨型錄音按鈕區塊 -->
-        <div class="mic-container">
-            <button id="record-button" class="record-button">
-                <i class="fas fa-microphone"></i>
+        <!-- Chat Input Area -->
+        <div class="chat-input-container">
+            <button id="audio-control-btn" class="audio-control-btn" title="暫停/繼續語音">
+                <i class="fas fa-pause-circle"></i>
             </button>
+            <input type="text" id="text-input" placeholder="打字也可以通喔..." class="chat-text-input">
+            <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+            <div class="mic-container" style="margin: 0; position: static; background: none; box-shadow: none;">
+                <button id="record-button" class="record-button" style="width: 48px; height: 48px; min-width: 48px;">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- 載入專屬的微服務調度 JS -->
     <script src="play_taipei.js"></script>
     <script>
         function logout() {
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('currentUserName');
-            window.location.href = '/';
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("currentUserName");
+            window.location.href = "/";
         }
     </script>
 </body>
