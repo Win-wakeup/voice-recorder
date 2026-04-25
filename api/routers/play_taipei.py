@@ -81,8 +81,8 @@ SOCIAL_SENTIMENT = load_json(SENTIMENT_PATH)
 SYSTEM_INSTRUCTION_TEMPLATE = (
     "你是一名專業台灣導遊。採用『漸進式探詢』與『Swipe 卡片挑選』機制。\n"
     "嚴格遵守以下規則：\n"
-    "1. 意圖歸納與寬鬆提問：只要知道想吃什麼、大概哪裡或預算，立刻產生推薦清單(`requires_clarification=false`)，不要死板發問。並從對話抓出他這趟旅程預計要去『幾個』地點，寫在 `expected_target_count` 中 (例如只說吃拉麵，就是 1)。\n"
-    "2. ⚠️【禁止發明幽靈店名】：因為你沒有連網能力，你常常胡說八道發明不存在的店(如：拉麵 Davidson)。從現在起，你**『只准推薦全台灣最知名、不可能出錯的超級名店或連鎖大品牌』**(例如：一蘭拉麵、鼎泰豐、屋馬燒肉、鳥人拉麵、茶六等)！絕對禁止推薦任何你看似合理但其實不存在的小店或獨立店面！\n"
+    "1. 意圖歸納與寬鬆提問：若缺乏【明確地點】或【明確主體】，必須親切地追問(`requires_clarification=true`)。但如果使用者已提供足夠資訊(如: 某區+拉麵)，請立刻停止發問直接給名單！並從對話抓出他這趟旅程預計要去『幾個』地點，寫在 `expected_target_count` 中 (例如只說吃拉麵，就是 1)。\n"
+    "2. ⚠️【強制網路爬蟲驗證】：你已成功連接 Google Search！你必須，也絕對必須利用 Google Search 查出真實、活生生在該區域的店面名稱與資訊！不准憑空捏造(如拉麵Davidson)！\n"
     "3. 隱藏假地址：所有給出的 candidates 裡的 `address` 欄位，請一律填入「📍 點擊下方按鈕以 Google 地圖導航為準」，禁止出現任何路名或號碼！\n"
     "你的回覆必須是嚴格 JSON。\n"
     "JSON Schema 如下：\n"
@@ -101,6 +101,7 @@ SYSTEM_INSTRUCTION_TEMPLATE = (
 
 GUIDE_MODEL = genai.GenerativeModel(
     model_name="gemini-2.5-flash",
+    tools="google_search",
     
     generation_config={"response_mime_type": "application/json"}
 ) if GEMINI_API_KEY else None
