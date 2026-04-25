@@ -61,12 +61,15 @@ function renderTimeline(itineraryArray, originCoords) {
     let htmlStr = '<div class="timeline">';
     itineraryArray.forEach((poi, index) => {
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originCoords.lat},${originCoords.lng}&destination=${encodeURIComponent(poi.name)}&travelmode=transit`;
+        const priceTag = poi.price ? `<span class="price-badge" style="background:#fcd34d;color:#92400e;padding:2px 6px;border-radius:12px;font-size:0.8rem;margin-left:5px;display:inline-block;white-space:nowrap;margin-bottom:4px;"><i class="fas fa-coins"></i> ${poi.price}</span>` : "";
+        const distanceTag = poi.distance ? `<span class="distance-badge" style="background:#bfdbfe;color:#1e40af;padding:2px 6px;border-radius:12px;font-size:0.8rem;margin-left:5px;display:inline-block;white-space:nowrap;margin-bottom:4px;"><i class="fas fa-walking"></i> ${poi.distance}</span>` : "";
         htmlStr += `
         <div class="timeline-item" style="animation-delay: ${index * 0.2}s">
             <div class="timeline-dot"></div>
             <div class="timeline-line"></div>
             <div class="timeline-content glass-panel">
                 <h3>${poi.name} <span class="time-tag">${POI_Time_String(poi)}</span></h3>
+                <div style="margin-top:4px; margin-bottom:8px;">${distanceTag} ${priceTag}</div>
                 <p class="ai-reason"><i class="fas fa-sparkles"></i> ${poi.description}</p>
                 <a class="nav-btn" href="${mapsUrl}" target="_blank">
                      <i class="fas fa-subway"></i> 出發導航

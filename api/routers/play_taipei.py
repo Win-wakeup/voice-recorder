@@ -30,6 +30,9 @@ class QueryRequest(BaseModel):
 
 class ItineraryItem(BaseModel):
     name: str
+    time: Optional[str] = ""
+    price: Optional[str] = ""
+    distance: Optional[str] = ""
     address: str = ""
     description: str
     image_url: str = ""
@@ -40,6 +43,7 @@ class Translation(BaseModel):
 
 class QueryResponse(BaseModel):
     status: str = "success"
+    requires_clarification: bool = False
     translation: Translation
     voice_script: str
     tts_audio_url: Optional[str] = None
@@ -75,22 +79,24 @@ SOCIAL_SENTIMENT = load_json(SENTIMENT_PATH)
 
 # --- 優化點 1: 預先建立模型與指令模板 ---
 SYSTEM_INSTRUCTION_TEMPLATE = (
-    "你是一名台灣雙語導遊，口氣熱情熱心。\n"
-    "你必須根據使用者提問、參考景點、今日社交熱門話題來回答。\n"
-    "回覆必須是嚴格的 JSON 格式。\n"
+    "你是一名台灣在地雙語導遊，必須根據使用者的位置與真正需求給出最佳推薦。\n"
+    "嚴格遵守以下規則：\n"
+    "1. 如果候選清單中「完全沒有」符合使用者需求(例如想找拉麵、特定異國料理、稀有景點)的選項，請**跳脫候選名單**！請直接動用你內建的 Google Maps 地理知識庫，推薦附近真實存在、且評價很高的店家！千萬不可拿名單內無關的東西硬湊！\n"
+    "2. 【要求安排『行程/一日遊』】：請務必填寫具體的『時間(time)』(如早上10:00、中午用餐)，並安插『美食/餐廳』，不能只丟出幾個景點，必須是連續且充實的一天。\n"
+    "3. 【主動討論行程】：如果使用者的需求非常模糊(例如：沒說預算、沒說想吃什麼料理)，請務必將 `requires_clarification` 設為 true，並在 voice_script 中**主動提問**引導(例如: '<聲音腳本> 請問預算大約多少？有偏好的食物嗎？')，行程 itinerary 則維持空列表 []，直到使用者給予充足資訊！！你現在是個對話機器人，可以來回互動！！\n"
+    "4. 你的回覆必須是嚴格的 JSON 格式。\n"
     "JSON Schema 如下：\n"
     "{\n"
-    "  \"translation\": {\"zh\": \"中文翻譯\", \"en\": \"英文翻譯\"},\n"
-    "  \"voice_script\": \"導遊的口說台詞，要自然且包含推薦原因\",\n"
+    "  \"requires_clarification\": true或false,\n"
+    "  \"translation\": {\"zh\": \"精確解讀中文(若需致歉在此)\", \"en\": \"英文翻譯\"}\n,"
+    "  \"voice_script\": \"熱情但不廢話的回覆。若 requires_clarification=true，請在此發問。\",\n"
     "  \"itinerary\": [\n"
-    "    {\"name\": \"景點名稱\", \"description\": \"景點簡介\", \"address\": \"地址(若知)\", \"image_url\": \"圖片URL(留空)\"}\n"
+    "    {\"time\": \"時間\", \"name\": \"景點/餐廳\", \"price\": \"估計價格帶(如: 150-300元)\", \"distance\": \"交通預估(如: 步行5分鐘)\", \"description\": \"為何推薦\", \"address\": \"地址\", \"image_url\": \"\"}\n"
     "  ]\n"
     "}\n"
-    "規則：\n"
-    "1. 如果使用者只是在寒暄，itinerary 可以是空陣列。\n"
-    "2. translation 欄位：請自動偵測使用者輸入的語言。如果輸入是中文，zh 欄位保留原文，並將其翻譯成英文填入 en 欄位；如果輸入是英文，en 欄位保留原文，並將其翻譯成中文填入 zh 欄位。\n"
-    "3. 參考景點：{poi_str}\n"
-    "4. 今日社群話題：\n{social_context}\n"
+    "5. translation 欄位：請自動偵測使用者輸入的語言。如果輸入是中文，zh 欄位保留原文，並將其翻譯成英文填入 en 欄位；如果輸入是英文，en 欄位保留原文，並將其翻譯成中文填入 zh 欄位。\n"
+    "6. 請從以下【候選景點資料庫】中挑選最適合的：\n{poi_str}\n"
+    "7. 參考今日話題(非強制)：\n{social_context}\n"
 )
 
 GUIDE_MODEL = genai.GenerativeModel(
@@ -201,6 +207,35 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         
         try:
             result = json.loads(ai_raw_response)
+            
+            # --- 動態反哺寫入機制 ---
+            from api.index import TAIPEI_DICT
+            import os
+            
+            new_pois_added = False
+            if "itinerary" in result and isinstance(result["itinerary"], list):
+                if isinstance(TAIPEI_DICT, dict):
+                    dict_names = list(TAIPEI_DICT.keys())
+                else:
+                    dict_names = [p.get("name", "") for p in TAIPEI_DICT]
+                
+                for item in result["itinerary"]:
+                    p_name = item.get("name")
+                    if p_name and p_name not in dict_names:
+                        new_entry = {"name": p_name, "translation": item.get("en", p_name), "tags": ["🤖 AI推薦"]}
+                        if isinstance(TAIPEI_DICT, dict):
+                            TAIPEI_DICT[p_name] = item.get("en", p_name)
+                        else:
+                            TAIPEI_DICT.append(new_entry)
+                        new_pois_added = True
+            
+            if new_pois_added:
+                try:
+                    dict_path = os.path.join(os.path.dirname(__file__), "..", "taipei_dict.json")
+                    with open(dict_path, "w", encoding="utf-8") as f:
+                        json.dump(TAIPEI_DICT, f, ensure_ascii=False, indent=2)
+                except OSError:
+                    pass
         except json.JSONDecodeError:
             logger.error(f"Failed to parse Gemini response: {ai_raw_response}")
             raise HTTPException(status_code=500, detail="Gemini output is not valid JSON")
