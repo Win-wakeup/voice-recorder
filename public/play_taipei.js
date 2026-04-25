@@ -88,8 +88,8 @@ function renderTimeline(itineraryArray, originCoords) {
             <div class="timeline-dot"></div>
             <div class="timeline-line"></div>
             <div class="timeline-content glass-panel">
-                <h3>${poi.name} <span class="time-tag">${poi.time_suggested || ''}</span></h3>
-                <p class="ai-reason"><i class="fas fa-sparkles"></i> ${poi.reason}</p>
+                <h3>${poi.name} <span class="time-tag">${POI_Time_String(poi)}</span></h3>
+                <p class="ai-reason"><i class="fas fa-sparkles"></i> ${poi.description}</p>
                 <a class="nav-btn" href="${mapsUrl}" target="_blank">
                      <i class="fas fa-subway"></i> 出發導航
                 </a>
@@ -99,6 +99,11 @@ function renderTimeline(itineraryArray, originCoords) {
     
     htmlStr += '</div>';
     container.innerHTML = htmlStr;
+}
+
+// Helper: 避免沒填時間時出現 undedefined
+function POI_Time_String(poi) {
+    return poi.time_suggested || poi.time || "現在出發";
 }
 
 function renderSubtitles(translationObj) {
@@ -177,11 +182,29 @@ async function processVoiceData() {
         const gpsCoords = await getCurrentGPS();
         const currentTime = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, '0');
 
-        let validPois = [];
-        let trending = "";
+        let llmFinalData = {};
 
-        // 若為導覽模式，才去問隊友 B 的過濾清單
-        if (currentMode === "itinerary") {
+        if (currentMode === "translate") {
+            showStatus("即時翻譯中...");
+            const currentUserId = "dino"; 
+            
+            // 打原本的翻譯 API
+            const transRes = await fetch("/api/translate", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    ride_id: currentUserId,
+                    text: userText
+                })
+            });
+            const transData = await transRes.json();
+            
+            llmFinalData.translation = { zh: transData.original_zh || userText, en: transData.final_english };
+            llmFinalData.voice_script = transData.final_english;
+            llmFinalData.itinerary = [];
+            
+        } else if (currentMode === "itinerary") {
+            // [步驟 2-b] 若為導覽模式，先去問隊友 B 的過濾清單
             showStatus("載入即時情境與社群情報...");
             
             // 呼叫隊友 B 寫好的過濾引擎 API
@@ -190,36 +213,36 @@ async function processVoiceData() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     time: currentTime, 
-                    weather: "晴天" // 隊友 B 寫死的情境測試
+                    weather: "晴天" 
                 })
             });
             const dataB = await contextResToB.json();
-            validPois = dataB.valid_pois || [];
-            trending = dataB.social_trends || [];
-            console.log(`[模組對接] 隊友 B 傳回了 ${validPois.length} 個營業中的景點！`);
-        }
+            const validPois = dataB.valid_pois || [];
+            const trending = dataB.social_trends || [];
 
-        // [步驟 3] 呼叫大腦 (隊友 A)：獲取 JSON
-        showStatus("AI 規劃行程中...");
-        
-        let llmFinalData;
-        const currentUserId = "dino"; // 因為是在手機上測試，目前寫死使用 Dino Session 即可。
-        
-        // 正式打隊友 A 寫好的 API 端點：
-        const llmResToA = await fetch("/api/play_taipei/llm_generation", {
-            method: "POST", headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                mode: currentMode, 
-                user_text: userText, 
-                session_id: currentUserId,
-                context_data: { valid_pois: validPois, social_trending: trending }
-            })
-        });
-        llmFinalData = await llmResToA.json();
+            // [步驟 3] 呼叫大腦 (隊友 A)：獲取 JSON
+            showStatus("AI 規劃行程中...");
+            const currentUserId = "dino"; 
+            
+            const llmResToA = await fetch("/api/play_taipei/query", {
+                method: "POST", headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    user_text: userText, 
+                    tags: selectedTags,
+                    session_id: currentUserId,
+                    context: { 
+                        lat: gpsCoords.lat, 
+                        lng: gpsCoords.lng, 
+                        current_time: currentTime, 
+                        weather: "Sunny" 
+                    }
+                })
+            });
+            llmFinalData = await llmResToA.json();
 
-        // 檢查如果有異常直接拋出
-        if (!llmFinalData || llmFinalData.status === "error") {
-            throw new Error("大腦運算失敗");
+            if (!llmFinalData || llmFinalData.status === "error") {
+                throw new Error("大腦運算失敗");
+            }
         }
 
         // [步驟 4] 前端渲染字幕與卡片
@@ -228,12 +251,11 @@ async function processVoiceData() {
             renderTimeline(llmFinalData.itinerary, gpsCoords);
         }
 
-        // [步驟 5] 拿語音合成並播放
+        // [步驟 5] 拿語音合成並播放 (只對英文發音)
         showStatus("為您語音播報...");
-        // 原本的 elevenlabs tts 寫在 /api/tts，要求 FormData，且必須傳入 voice_id 與 text
         const ttsFormData = new FormData();
         ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); // 固定預設 ElevenLabs Rachel 音色
-        ttsFormData.append("text", llmFinalData.voice_script || "");
+        ttsFormData.append("text", llmFinalData.voice_script || llmFinalData.translation.en || "");
 
         const ttsRes = await fetch("/api/tts", { 
             method: "POST", 
@@ -246,7 +268,7 @@ async function processVoiceData() {
         const audio = new Audio(URL.createObjectURL(mp3Blob));
         await audio.play();
         
-        showStatus("導覽完畢！有問題隨時問我！");
+        showStatus(currentMode === "itinerary" ? "導覽完畢！有問題隨時問我！" : "翻譯成功！請說下一句...");
 
     } catch (e) {
         console.error(e);
