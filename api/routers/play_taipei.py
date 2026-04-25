@@ -289,6 +289,7 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
 
 class ScheduleRequest(BaseModel):
     liked_venues: List[ItineraryItem]
+    session_id: str = "default_session"
     context: ContextData = Field(default_factory=ContextData)
 
 # We will reuse QueryResponse but this time swipe_candidates will hold the chronological itinerary
@@ -299,27 +300,50 @@ async def schedule_itinerary(request: ScheduleRequest):
     try:
         venue_str = "\n".join([f"- {v.name}: {v.description}" for v in request.liked_venues])
         
+        # Load chat history
+        history_text = ""
+        if request.session_id in session_db:
+            history_parts = []
+            for msg in session_db[request.session_id][-10:]:
+                history_parts.append(f"User: {msg['user']}\nAI: {msg['ai']}")
+            history_text = "\n".join(history_parts)
+            
         system_prompt = (
-            "你是一名專業行程規劃師。使用者已經選出了他們想去的景點/餐廳列表，請幫他們安排出合理的『一日遊行程表』。\n"
-            "請為每個地點安排具體的拜訪時間(time)，並在備註中加入交通建議。\n"
-            f"使用者選定的景點如下：\n{venue_str}\n\n"
-            "你的回覆必須是嚴格的 JSON 格式。\n"
+            "你是一名專業的台灣在地行程規劃師。使用者已經在『交友軟體式的滑卡介面』中，選出了幾家他們有興趣的景點或餐廳，請你根據他們之前的對話需求，幫他們最終定奪並安排好具體的『時間軸行程表』。\n\n"
+            f"【歷史對話紀錄 (重要約束來源)】：\n{history_text}\n\n"
+            f"【使用者選中的候選名單】：\n{venue_str}\n\n"
+            "嚴格遵守以下規則：\n"
+            "1. 【極端數量限制 - 需求過濾】：請仔細看歷史對話紀錄！分析使用者到底需要排『幾個』地點或餐廳！\n"
+            "   - ***極度警告***：如果對話中明示或暗示只吃「一餐」或「一家店」(例如使用者說『我想吃拉麵』、『6.吃』)，就算他在卡片上按了 5 家店的愛心，你的最終 json 結果 `swipe_candidates` 陣列長度【絕對、必須嚴格限制為 1】！絕對不准把沒意義的備選項目全部排進連續吃的行程！\n"
+            "   - 只有當對話中明確說明要玩一整天、或者吃好幾餐，才可以放多個地點！\n"
+            "2. 【時間段嚴格遵守】：如果對話紀錄中有提到具體時間（例如：6點吃、中午去），請完全遵照該時間排程。\n"
+            "3. 【防幻覺與地理準確性】：絕對不能捏造不存在的假地址或錯亂商圈！如果不確定店家的真實地址，地址欄可以直接留白，不要硬掰門牌號碼！\n"
+            "4. 回覆必須是合法的 JSON。\n"
             "JSON Schema 如下：\n"
             "{\n"
             "  \"requires_clarification\": false,\n"
-            "  \"translation\": {\"zh\": \"這是為您精心規劃的行程表！\", \"en\": \"Here is your itinerary!\"},\n"
-            "  \"voice_script\": \"行程已經為您排好囉！請看下方的時間表。\",\n"
+            "  \"translation\": {\"zh\": \"這是最後的精華行程表！\", \"en\": \"Here is your itinerary!\"}\n,"
+            "  \"voice_script\": \"行程排好囉！為您精選出了最棒的安排。\",\n"
             "  \"swipe_candidates\": [\n"
-            "    {\"time\": \"開始時間 (如: 09:00)\", \"name\": \"景點/餐廳名稱\", \"price\": \"價格\", \"distance\": \"交通/步行預估\", \"description\": \"你對此安排的簡短導覽\", \"address\": \"地址\", \"image_url\": \"\"}\n"
+            "    {\"time\": \"排定時間\", \"name\": \"店名\", \"price\": \"價格\", \"distance\": \"交通\", \"description\": \"為什麼從眾多愛心中特別挑出它\", \"address\": \"真實地址\", \"image_url\": \"\"}\n"
             "  ]\n"
             "}\n"
-            "注意：請確保所有使用者選定的景點都被納入 schedule 中(放進 swipe_candidates 陣列裡)！"
         )
         
         response = GUIDE_MODEL.generate_content(system_prompt)
         ai_raw_response = response.text
         
-        result = json.loads(ai_raw_response)
+        # Strip potential markdown block
+        clean_json = ai_raw_response.strip()
+        if clean_json.startswith("```json"):
+            clean_json = clean_json[7:]
+        elif clean_json.startswith("```"):
+            clean_json = clean_json[3:]
+        if clean_json.endswith("```"):
+            clean_json = clean_json[:-3]
+        clean_json = clean_json.strip()
+        
+        result = json.loads(clean_json)
         
         return QueryResponse(
             requires_clarification=False,
