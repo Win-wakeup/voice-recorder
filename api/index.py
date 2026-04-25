@@ -45,7 +45,7 @@ possible_dict_paths = [
     Path.cwd().parent / "taipei_dict.json"
 ]
 
-LOCAL_DICT = {}
+LOCAL_DICT = []
 for p in possible_dict_paths:
     if p.exists():
         try:
@@ -57,7 +57,7 @@ for p in possible_dict_paths:
             logger.warning(f"Failed to load dict from {p}: {e}")
 
 # 預先處理靜態字典字串 
-DICT_CONTEXT = "\n".join([f"{k}: {v}" for k, v in LOCAL_DICT.items()])
+DICT_CONTEXT = "\n".join([f"{item['name']}: {item['translation']}" for item in LOCAL_DICT if isinstance(item, dict) and 'name' in item and 'translation' in item])
 
 system_instruction = (
     "You are a Taiwanese tourist driver translating for foreign passengers.\n"
@@ -138,6 +138,10 @@ class EndRideRequest(BaseModel):
 
 class AudioRequest(BaseModel):
     audio_path: str
+
+class ContextRequest(BaseModel):
+    time: str
+    weather: str
 
 def process_ride_data(data: dict):
     logger.info(f"📦 [Export] Ride {data['ride_id']} finished with {data['total_conversations']} messages.")
@@ -476,6 +480,71 @@ async def hello_world():
         "text": "Hello from FastAPI on Vercel with Integrated Translation API!",
         "status": "success",
         "timestamp": "2026-04-11"
+    }
+
+@app.post("/api/fetch_context")
+async def fetch_context(request: ContextRequest):
+    req_time = request.time # format "HH:MM"
+    weather = request.weather # e.g. "雨"
+    
+    valid_pois = []
+    
+    def time_to_minutes(t_str):
+        try:
+            h, m = map(int, t_str.split(":"))
+            return h * 60 + m
+        except:
+            return 0
+            
+    req_minutes = time_to_minutes(req_time)
+    
+    for item in LOCAL_DICT:
+        if not isinstance(item, dict):
+            continue
+            
+        tags = item.get("tags", [])
+        
+        # 1. 天氣判定：如果下雨，如果含有「🌲 自然戶外」但沒有「🖼️ 室內展覽」或「🛍️ 商圈購物」或「🎳 室內娛樂」，就盡量剔除 (雨天不宜)
+        # 基於新的 EMOJI Tags 
+        if weather == "雨" and ("🌲 自然戶外" in tags) and not ("🖼️ 室內展覽" in tags or "🛍️ 商圈購物" in tags or "🎳 室內娛樂" in tags or "🍜 在地美食" in tags):
+            continue
+            
+        # 2. 營業時間判定
+        open_hours = item.get("open_hours", "00:00-24:00")
+        if "-" in open_hours:
+            start_str, end_str = open_hours.split("-")
+            start_min = time_to_minutes(start_str)
+            end_min = time_to_minutes(end_str)
+            
+            # Simple check, ignoring complex cross-midnight for simple mock
+            # Night markets often 17:00-23:59 or 17:00-01:00
+            # If 00:00-24:00, always pass
+            if open_hours != "00:00-24:00":
+                if end_min < start_min: # Cross midnight, e.g. 17:00 - 01:00
+                    # if req=23:00 (1380) -> between 1020 and 1440
+                    # if req=00:30 (30) -> between 0 and 60
+                    if not (req_minutes >= start_min or req_minutes <= end_min):
+                        continue
+                else:
+                    if not (start_min <= req_minutes <= end_min):
+                        continue
+                        
+        valid_pois.append(item)
+        
+    # Read social sentiment trends
+    social_trends = []
+    mock_file = Path(__file__).parent / "social_sentiment_mock.json"
+    if mock_file.exists():
+        try:
+            with open(mock_file, "r", encoding="utf-8") as f:
+                social_data = json.load(f)
+                social_trends = social_data.get("trending_topics", [])
+        except Exception as e:
+            logger.error(f"Failed to read social trends: {e}")
+
+    return {
+        "valid_pois": valid_pois,
+        "social_trends": social_trends
     }
 
 # Disabled StaticFiles fallthrough to prevent Vercel returning 200 OK HTML on 404s

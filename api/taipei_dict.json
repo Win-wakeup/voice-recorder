@@ -1,102 +1,858 @@
-{
-  "野柳女王頭": "Yehliu Queen's Head",
-  "野柳地質公園": "Yehliu Geopark",
-  "九份老街": "Jiufen Old Street",
-  "阿妹茶樓": "A-MEI Tea House",
-  "十分老街": "Shifen Old Street",
-  "十分瀑布": "Shifen Waterfall",
-  "平溪天燈": "Pingxi Sky Lantern",
-  "淡水老街": "Tamsui Old Street",
-  "漁人碼頭": "Fisherman's Wharf",
-  "淡水阿給": "Tamsui A-gei",
-  "淡水鐵蛋": "Tamsui Iron Egg",
-  "紅毛城": "Fort San Domingo",
-  "十三行博物館": "Shihsanhang Museum of Archaeology",
-  "八里左岸": "Bali Left Bank",
-  "烏來老街": "Wulai Old Street",
-  "烏來台車": "Wulai Log Cart",
-  "金山老街": "Jinshan Old Street",
-  "金山鴨肉": "Jinshan Duck",
-  "朱銘美術館": "Juming Museum",
-  "林本源園邸": "Lin Family Mansion and Garden",
-  "新北歡樂耶誕城": "Christmasland in New Taipei City",
-  "三峽老街": "Sanxia Old Street",
-  "金牛角麵包": "Golden Horn Bread",
-  "鶯歌陶瓷老街": "Yingge Ceramics Old Street",
-  "烘爐地": "Hongludi",
-  "碧潭風景區": "Bitan Scenic Area",
-  "菁桐車站": "Jingtong Station",
-  "猴硐貓村": "Houtong Cat Village",
-  "陰陽海": "Yin Yang Sea",
-  "黃金博物館": "Gold Museum",
-  "黃金瀑布": "Golden Waterfall",
-  "基隆廟口夜市": "Keelung Miaokou Night Market",
-  "大稻埕": "Dadaocheng",
-  "迪化街": "Dihua Street",
-  "霞海城隍廟": "Xiahai City God Temple",
-  "龍山寺": "Longshan Temple",
-  "剝皮寮": "Bopiliao Historical Block",
-  "西門町": "Ximending",
-  "西門紅樓": "The Red House",
-  "松山文創園區": "Songshan Cultural and Creative Park",
-  "華山1914": "Huashan 1914 Creative Park",
-  "士林夜市": "Shilin Night Market",
-  "饒河夜市": "Raohe Street Night Market",
-  "寧夏夜市": "Ningxia Night Market",
-  "師大夜市": "Shida Night Market",
-  "南機場夜市": "Nanjichang Night Market",
-  "公館商圈": "Gongguan Shopping District",
-  "信義商圈": "Xinyi Shopping District",
-  "東區商圈": "Eastern Shopping District",
-  "微風南山": "Breeze Nan Shan",
-  "美麗華百樂園": "Miramar Entertainment Park",
-  "台北小巨蛋": "Taipei Arena",
-  "光華商場": "Guanghua Digital Plaza",
-  "台北地下街": "Taipei City Mall",
-  "永康街": "Yongkang Street",
-  "北投溫泉": "Beitou Hot Spring",
-  "地熱谷": "Thermal Valley",
-  "陽明山國家公園": "Yangmingshan National Park",
-  "擎天崗": "Qingtiangang Grassland",
-  "竹子湖": "Zhuzihu",
-  "象山親山步道": "Xiangshan Hiking Trail",
-  "大湖公園": "Dahu Park",
-  "大安森林公園": "Daan Forest Park",
-  "二二八和平公園": "228 Peace Memorial Park",
-  "台北植物園": "Taipei Botanical Garden",
-  "貓空纜車": "Maokong Gondola",
-  "國民革命忠烈祠": "National Revolutionary Martyrs' Shrine",
-  "中正紀念堂": "Chiang Kai-shek Memorial Hall",
-  "國父紀念館": "Sun Yat-sen Memorial Hall",
-  "故宮博物院": "National Palace Museum",
-  "士林官邸": "Shilin Official Residence",
-  "圓山大飯店": "The Grand Hotel",
-  "寶藏巖": "Treasure Hill",
-  "台北當代藝術館": "Museum of Contemporary Art Taipei",
-  "袖珍博物館": "Miniatures Museum of Taiwan",
-  "林安泰古厝": "Lin An Tai Historical House",
-  "水湳洞": "Shuinandong",
-  "茶壺山": "Teapot Mountain",
-  "鼻頭角": "Bitou Cape",
-  "深坑老街": "Shenkeng Old Street",
-  "深坑臭豆腐": "Shenkeng Stinky Tofu",
-  "白沙灣": "Baishawan",
-  "淺水灣": "Qianshuiwan",
-  "老梅綠石槽": "Laomei Green Reef",
-  "珍珠奶茶": "Bubble Milk Tea",
-  "滷肉飯": "Braised Pork Rice",
-  "牛肉麵": "Beef Noodle Soup",
-  "蚵仔煎": "Oyster Omelet",
-  "臭豆腐": "Stinky Tofu",
-  "豬血糕": "Pig's Blood Cake",
-  "大腸包小腸": "Taiwanese sausage with sticky rice",
-  "地瓜球": "Sweet Potato Balls",
-  "胡椒餅": "Pepper Bun",
-  "生煎包": "Pan-fried Pork Bun",
-  "小籠包": "Xiaolongbao",
-  "棺材板": "Coffin Bread",
-  "肉圓": "Ba-wan (Taiwanese Meatball)",
-  "四神湯": "Four Herbs Soup",
-  "麵線": "Oyster Vermicelli",
-  "鼎泰豐": "Din Tai Fung"
-}
+[
+  {
+    "name": "野柳女王頭",
+    "translation": "Yehliu Queen's Head",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "野柳地質公園",
+    "translation": "Yehliu Geopark",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "九份老街",
+    "translation": "Jiufen Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "阿妹茶樓",
+    "translation": "A-MEI Tea House",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "十分老街",
+    "translation": "Shifen Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "十分瀑布",
+    "translation": "Shifen Waterfall",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "平溪天燈",
+    "translation": "Pingxi Sky Lantern",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "淡水老街",
+    "translation": "Tamsui Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "漁人碼頭",
+    "translation": "Fisherman's Wharf",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "淡水阿給",
+    "translation": "Tamsui A-gei",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "淡水鐵蛋",
+    "translation": "Tamsui Iron Egg",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "紅毛城",
+    "translation": "Fort San Domingo",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "十三行博物館",
+    "translation": "Shihsanhang Museum of Archaeology",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "八里左岸",
+    "translation": "Bali Left Bank",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "烏來老街",
+    "translation": "Wulai Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "烏來台車",
+    "translation": "Wulai Log Cart",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "👨‍👩‍👧 親子體驗"
+    ]
+  },
+  {
+    "name": "金山老街",
+    "translation": "Jinshan Old Street",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "金山鴨肉",
+    "translation": "Jinshan Duck",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "朱銘美術館",
+    "translation": "Juming Museum",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "林本源園邸",
+    "translation": "Lin Family Mansion and Garden",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "新北歡樂耶誕城",
+    "translation": "Christmasland in New Taipei City",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "三峽老街",
+    "translation": "Sanxia Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "金牛角麵包",
+    "translation": "Golden Horn Bread",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "鶯歌陶瓷老街",
+    "translation": "Yingge Ceramics Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "烘爐地",
+    "translation": "Hongludi",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "碧潭風景區",
+    "translation": "Bitan Scenic Area",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "菁桐車站",
+    "translation": "Jingtong Station",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "猴硐貓村",
+    "translation": "Houtong Cat Village",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "👨‍👩‍👧 親子體驗"
+    ]
+  },
+  {
+    "name": "陰陽海",
+    "translation": "Yin Yang Sea",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "黃金博物館",
+    "translation": "Gold Museum",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "黃金瀑布",
+    "translation": "Golden Waterfall",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "基隆廟口夜市",
+    "translation": "Keelung Miaokou Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "大稻埕",
+    "translation": "Dadaocheng",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "迪化街",
+    "translation": "Dihua Street",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "霞海城隍廟",
+    "translation": "Xiahai City God Temple",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "龍山寺",
+    "translation": "Longshan Temple",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "剝皮寮",
+    "translation": "Bopiliao Historical Block",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "西門町",
+    "translation": "Ximending",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "西門紅樓",
+    "translation": "The Red House",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "松山文創園區",
+    "translation": "Songshan Cultural and Creative Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "華山1914",
+    "translation": "Huashan 1914 Creative Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "士林夜市",
+    "translation": "Shilin Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "饒河夜市",
+    "translation": "Raohe Street Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "寧夏夜市",
+    "translation": "Ningxia Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "師大夜市",
+    "translation": "Shida Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "南機場夜市",
+    "translation": "Nanjichang Night Market",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🍜 在地美食",
+      "📸 熱門打卡"
+    ]
+  },
+  {
+    "name": "公館商圈",
+    "translation": "Gongguan Shopping District",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物"
+    ]
+  },
+  {
+    "name": "信義商圈",
+    "translation": "Xinyi Shopping District",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物"
+    ]
+  },
+  {
+    "name": "東區商圈",
+    "translation": "Eastern Shopping District",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物"
+    ]
+  },
+  {
+    "name": "微風南山",
+    "translation": "Breeze Nan Shan",
+    "open_hours": "11:00-22:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "美麗華百樂園",
+    "translation": "Miramar Entertainment Park",
+    "open_hours": "11:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "台北小巨蛋",
+    "translation": "Taipei Arena",
+    "open_hours": "11:00-22:00",
+    "tags": [
+      "🛍️ 商圈購物"
+    ]
+  },
+  {
+    "name": "光華商場",
+    "translation": "Guanghua Digital Plaza",
+    "open_hours": "17:00-23:59",
+    "tags": [
+      "🛍️ 商圈購物"
+    ]
+  },
+  {
+    "name": "台北地下街",
+    "translation": "Taipei City Mall",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "🎳 室內娛樂"
+    ]
+  },
+  {
+    "name": "永康街",
+    "translation": "Yongkang Street",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "北投溫泉",
+    "translation": "Beitou Hot Spring",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "地熱谷",
+    "translation": "Thermal Valley",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "陽明山國家公園",
+    "translation": "Yangmingshan National Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "擎天崗",
+    "translation": "Qingtiangang Grassland",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "竹子湖",
+    "translation": "Zhuzihu",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "象山親山步道",
+    "translation": "Xiangshan Hiking Trail",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "大湖公園",
+    "translation": "Dahu Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "大安森林公園",
+    "translation": "Daan Forest Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "二二八和平公園",
+    "translation": "228 Peace Memorial Park",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "台北植物園",
+    "translation": "Taipei Botanical Garden",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "貓空纜車",
+    "translation": "Maokong Gondola",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "國民革命忠烈祠",
+    "translation": "National Revolutionary Martyrs' Shrine",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "中正紀念堂",
+    "translation": "Chiang Kai-shek Memorial Hall",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "國父紀念館",
+    "translation": "Sun Yat-sen Memorial Hall",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "故宮博物院",
+    "translation": "National Palace Museum",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "士林官邸",
+    "translation": "Shilin Official Residence",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "圓山大飯店",
+    "translation": "The Grand Hotel",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "寶藏巖",
+    "translation": "Treasure Hill",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "台北當代藝術館",
+    "translation": "Museum of Contemporary Art Taipei",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "袖珍博物館",
+    "translation": "Miniatures Museum of Taiwan",
+    "open_hours": "09:00-17:00",
+    "tags": [
+      "🖼️ 室內展覽"
+    ]
+  },
+  {
+    "name": "林安泰古厝",
+    "translation": "Lin An Tai Historical House",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "水湳洞",
+    "translation": "Shuinandong",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "茶壺山",
+    "translation": "Teapot Mountain",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "🌲 自然戶外"
+    ]
+  },
+  {
+    "name": "鼻頭角",
+    "translation": "Bitou Cape",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "深坑老街",
+    "translation": "Shenkeng Old Street",
+    "open_hours": "10:00-20:00",
+    "tags": [
+      "⛩️ 歷史古蹟",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "深坑臭豆腐",
+    "translation": "Shenkeng Stinky Tofu",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "白沙灣",
+    "translation": "Baishawan",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "淺水灣",
+    "translation": "Qianshuiwan",
+    "open_hours": "00:00-24:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "老梅綠石槽",
+    "translation": "Laomei Green Reef",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "珍珠奶茶",
+    "translation": "Bubble Milk Tea",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "滷肉飯",
+    "translation": "Braised Pork Rice",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "牛肉麵",
+    "translation": "Beef Noodle Soup",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "蚵仔煎",
+    "translation": "Oyster Omelet",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "臭豆腐",
+    "translation": "Stinky Tofu",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "豬血糕",
+    "translation": "Pig's Blood Cake",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "大腸包小腸",
+    "translation": "Taiwanese sausage with sticky rice",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "地瓜球",
+    "translation": "Sweet Potato Balls",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "胡椒餅",
+    "translation": "Pepper Bun",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "生煎包",
+    "translation": "Pan-fried Pork Bun",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "小籠包",
+    "translation": "Xiaolongbao",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "棺材板",
+    "translation": "Coffin Bread",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "肉圓",
+    "translation": "Ba-wan (Taiwanese Meatball)",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "四神湯",
+    "translation": "Four Herbs Soup",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  },
+  {
+    "name": "麵線",
+    "translation": "Oyster Vermicelli",
+    "open_hours": "11:00-21:00",
+    "tags": [
+      "🍜 在地美食"
+    ]
+  },
+  {
+    "name": "鼎泰豐",
+    "translation": "Din Tai Fung",
+    "open_hours": "10:00-22:00",
+    "tags": [
+      "📸 熱門打卡",
+      "☕ 文青散策"
+    ]
+  }
+]
