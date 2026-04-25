@@ -112,20 +112,22 @@ async function processVoiceData() {
         const translation = { zh: transData.original_zh || userText, en: transData.final_english };
         renderSubtitles(translation);
         
-        // [步驟 3] 語音合成播報 (TTS)
-        showStatus("為您語音播報...");
-        const ttsFormData = new FormData();
-        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); // 固定預設 ElevenLabs Rachel 音色
-        ttsFormData.append("text", translation.en);
+        // [步驟 3] 語音合成播報 (語音克隆 TTS)
+        showStatus("以您的音色合成翻譯中...");
+        
+        // 使用克隆 Endpoint，傳入剛剛錄製的音檔當作 sample
+        const cloneFormData = new FormData();
+        cloneFormData.append("file", audioBlob, "recording.webm");
+        cloneFormData.append("text", translation.en);
 
-        const ttsRes = await fetch("/api/tts", { 
+        const ttsRes = await fetch("/api/clone", { 
             method: "POST", 
-            body: ttsFormData 
+            body: cloneFormData 
         });
         
         if (!ttsRes.ok) {
             const errBody = await ttsRes.text();
-            throw new Error(`TTS API 錯誤 (${ttsRes.status}): ${errBody}`);
+            throw new Error(`語音克隆錯誤 (${ttsRes.status}): ${errBody}`);
         }
         
         const mp3Blob = await ttsRes.blob();
