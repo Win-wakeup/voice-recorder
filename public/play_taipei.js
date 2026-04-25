@@ -203,8 +203,9 @@ async function processVoiceData() {
         showStatus("AI 規劃行程中...");
         
         let llmFinalData;
-        /* 正式打 A 端點：
-        const currentUserId = localStorage.getItem('currentUser') || 'guest';
+        const currentUserId = "dino"; // 因為是在手機上測試，目前寫死使用 Dino Session 即可。
+        
+        // 正式打隊友 A 寫好的 API 端點：
         const llmResToA = await fetch("/api/play_taipei/llm_generation", {
             method: "POST", headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -215,23 +216,11 @@ async function processVoiceData() {
             })
         });
         llmFinalData = await llmResToA.json();
-        */
 
-        // 開發期 Mock Data (假裝隊友A已經完美回傳了)
-        llmFinalData = {
-            "translation": {
-                "zh": userText || "我現在在台北可以去哪裡玩？",
-                "en": "Where can I go for fun in Taipei right now?"
-            },
-            "voice_script": currentMode === "itinerary" ? "我推薦您立刻前往饒河街觀光夜市，那裡有非常多好吃的美食喔！" : "Where can I go for fun in Taipei right now?",
-            "itinerary": currentMode === "itinerary" ? [
-                {
-                    "name": "饒河街觀光夜市",
-                    "time_suggested": "現在出發",
-                    "reason": "這個時間最適合去夜市吃晚餐！而且這是 PTT 鄉民強力推薦的在地美食聚集地。"
-                }
-            ] : []
-        };
+        // 檢查如果有異常直接拋出
+        if (!llmFinalData || llmFinalData.status === "error") {
+            throw new Error("大腦運算失敗");
+        }
 
         // [步驟 4] 前端渲染字幕與卡片
         renderSubtitles(llmFinalData.translation);
@@ -244,7 +233,7 @@ async function processVoiceData() {
         // 原本的 elevenlabs tts 寫在 /api/tts，要求 FormData，且必須傳入 voice_id 與 text
         const ttsFormData = new FormData();
         ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); // 固定預設 ElevenLabs Rachel 音色
-        ttsFormData.append("text", llmFinalData.voice_script);
+        ttsFormData.append("text", llmFinalData.voice_script || "");
 
         const ttsRes = await fetch("/api/tts", { 
             method: "POST", 
