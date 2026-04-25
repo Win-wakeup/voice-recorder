@@ -421,6 +421,16 @@ async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
             data = {"name": "my_voice_clone"}
             response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
 
+        if response1.status_code != 200 and "voice_limit_reached" in response1.text:
+            get_resp = requests.get("https://api.elevenlabs.io/v1/voices", headers=headers)
+            if get_resp.status_code == 200:
+                for v in get_resp.json().get("voices", []):
+                    if v.get("category") == "cloned":
+                        requests.delete(f"https://api.elevenlabs.io/v1/voices/{v["voice_id"]}", headers=headers)
+            with open(filepath, "rb") as audio_f:
+                files_upload = {"files": ("audio.webm", audio_f, "audio/webm")}
+                response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
+
         if response1.status_code != 200:
             return JSONResponse(status_code=500, content={"message": f"ElevenLabs Voice Add Error: {response1.text}"})
 
@@ -429,6 +439,9 @@ async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
         tts_url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
         tts_data = {"text": text, "model_id": "eleven_monolingual_v1"}
         response2 = requests.post(tts_url, json=tts_data, headers=headers)
+        
+        requests.delete(f"https://api.elevenlabs.io/v1/voices/{voice_id}", headers=headers)
+
         if response2.status_code != 200:
             return JSONResponse(status_code=500, content={"message": f"ElevenLabs TTS Error: {response2.text}"})
 
