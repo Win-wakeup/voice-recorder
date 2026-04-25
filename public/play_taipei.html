@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音為台北 - 語音導覽</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css?v=3">
+    <!-- 加入 FontAwesome 供 icon 使用 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container play-taipei-container">
+        
+        <!-- 頂部 Navbar / 返回鍵 / 登出鍵 -->
+        <div class="header-nav">
+            <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> 返回</a>
+            <h2>音為台北 AI 語音導覽</h2>
+            <button class="back-btn" onclick="logout()" style="margin-left: 10px; margin-right: 0; outline: none; border: none; cursor: pointer; font-size: 0.95rem;">登出</button>
+        </div>
+
+        <!-- 模式切換 Tabs -->
+        <div class="mode-tabs">
+            <button id="tab-translate" class="tab-btn active" onclick="switchMode('translate')">🌍 純翻譯</button>
+            <button id="tab-itinerary" class="tab-btn" onclick="switchMode('itinerary')">🗺️ 行程導覽</button>
+        </div>
+
+        <!-- 情境標籤區 (僅在導覽模式顯示) -->
+        <div id="tags-section" class="tags-section" style="display: none;">
+            <p class="section-title">您偏好的行程風格？(可複選)</p>
+            <div class="tags-container">
+                <button class="tag-btn" onclick="toggleTag(this, '在地美食')">🍜 在地美食</button>
+                <button class="tag-btn" onclick="toggleTag(this, '商圈購物')">🛍️ 商圈購物</button>
+                <button class="tag-btn" onclick="toggleTag(this, '熱門打卡')">📸 熱門打卡</button>
+                <button class="tag-btn" onclick="toggleTag(this, '文青散策')">☕ 文青散策</button>
+                <button class="tag-btn" onclick="toggleTag(this, '室內展覽')">🖼️ 室內展覽</button>
+                <button class="tag-btn" onclick="toggleTag(this, '自然戶外')">🌲 自然戶外</button>
+                <button class="tag-btn" onclick="toggleTag(this, '歷史古蹟')">⛩️ 歷史古蹟</button>
+                <button class="tag-btn" onclick="toggleTag(this, '親子體驗')">👨‍👩‍👧 親子體驗</button>
+                <button class="tag-btn" onclick="toggleTag(this, '室內娛樂')">🎳 室內娛樂</button>
+            </div>
+        </div>
+
+        <!-- 雙向翻譯字幕看板 -->
+        <div id="subtitle-board" class="subtitle-board glass-panel" style="display: none;">
+            <div class="lang-source" id="sub-zh"></div>
+            <div class="lang-translated" id="sub-en"></div>
+        </div>
+
+        <!-- 垂直時間軸展演區 (僅在導覽模式且有結果時顯示) -->
+        <div id="itinerary-display" class="itinerary-display">
+            <!-- JS 動態插入點 -->
+        </div>
+
+        <!-- 全局狀態提示文字 -->
+        <div id="status-text" class="status-text">想去哪裡？按住麥克風告訴我！</div>
+
+        <!-- 巨型錄音按鈕區塊 -->
+        <div class="mic-container">
+            <button id="record-button" class="record-button">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 載入專屬的微服務調度 JS -->
+    <script src="play_taipei.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUserName');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
