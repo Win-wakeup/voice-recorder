@@ -127,10 +127,11 @@ async function processVoiceData() {
         // [步驟 3] 語音合成播報 (語音克隆 TTS)
         showStatus("以您的音色合成翻譯中...");
         
-        // 使用克隆 Endpoint，傳入剛剛錄製的音檔當作 sample
+        // 使用克隆 Endpoint，傳入剛剛錄製的音檔當作 sample，並帶入 ride_id 進行快取
         const cloneFormData = new FormData();
         cloneFormData.append("file", audioBlob, "recording.webm");
         cloneFormData.append("text", translation.en);
+        cloneFormData.append("ride_id", currentUserId);
 
         const ttsRes = await fetch("/api/clone", { 
             method: "POST", 
