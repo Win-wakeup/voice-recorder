@@ -280,3 +280,8 @@ async function processVoiceData() {
         toggleMicButton(true);
     }
 }
+
+// 初始化 UI 狀態
+window.addEventListener('DOMContentLoaded', () => {
+    switchMode('itinerary');
+});
