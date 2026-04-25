@@ -424,44 +424,94 @@ async def text_to_speech(voice_id: str = Form(...), text: str = Form(...)):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 
-@app.post("/api/clone")
-async def clone_voice(text: str = Form(...), file: UploadFile = File(...)):
-    """Legacy shim: kept for backwards compatibility. Creates a new voice every time."""
-    try:
-        filepath = f"/tmp/{file.filename}"
-        with open(filepath, "wb") as f:
-            f.write(await file.read())
+# 全域快取：ride_id -> voice_id，避免重複創建聲音導致額度耗盡
+session_voice_ids: Dict[str, str] = {}
 
+@app.post("/api/clone")
+async def clone_voice(text: str = Form(...), file: UploadFile = File(...), ride_id: str = Form(None)):
+    """
+    優化後的語音克隆邏輯：
+    1. 優先從 session_voice_ids 找尋是否已為此 session 建立過聲音。
+    2. 若未建立，嘗試建立 (requests.post /v1/voices/add)。
+    3. 若發生「每月額度已達上限 (65次)」，則自動降級使用預設高品質聲音，確保功能不中斷。
+    """
+    try:
         el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
         headers = {"xi-api-key": el_key}
+        
+        # 預設聲音 (Mimi)，作為額度耗盡時的備援
+        DEFAULT_VOICE_ID = "zrHiDhphv9ZnVXBqCLjz" 
+        voice_id = None
 
-        with open(filepath, "rb") as audio_f:
-            files_upload = {"files": ("audio.webm", audio_f, "audio/webm")}
-            data = {"name": "my_voice_clone"}
-            response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
+        # [優化 1] 檢查快取
+        if ride_id and ride_id in session_voice_ids:
+            voice_id = session_voice_ids[ride_id]
+            logger.info(f"♻️ [Voice Cache Hit] Reusing voice {voice_id} for session {ride_id}")
 
-        if response1.status_code != 200 and "voice_limit_reached" in response1.text:
-            get_resp = requests.get("https://api.elevenlabs.io/v1/voices", headers=headers)
-            if get_resp.status_code == 200:
-                for v in get_resp.json().get("voices", []):
-                    if v.get("category") == "cloned":
-                        requests.delete(f"https://api.elevenlabs.io/v1/voices/{v["voice_id"]}", headers=headers)
+        # [步驟 2] 如果沒有快取，則進行克隆
+        if not voice_id:
+            filepath = f"/tmp/{file.filename}"
+            with open(filepath, "wb") as f:
+                f.write(await file.read())
+
             with open(filepath, "rb") as audio_f:
                 files_upload = {"files": ("audio.webm", audio_f, "audio/webm")}
+                data = {"name": f"clone_{ride_id}" if ride_id else "temp_clone"}
+                
+                logger.info(f"🎤 [Voice Clone] Attempting to create new voice for {ride_id}...")
                 response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
 
-        if response1.status_code != 200:
-            return JSONResponse(status_code=500, content={"message": f"ElevenLabs Voice Add Error: {response1.text}"})
+            # [優化 2] 處理額度限制
+            if response1.status_code != 200:
+                resp_text = response1.text
+                if "voice_add_edit_limit_reached" in resp_text:
+                    logger.warning("⚠️ [Quota Reached] ElevenLabs monthly limit reached. Falling back to default voice.")
+                    voice_id = DEFAULT_VOICE_ID
+                elif "voice_limit_reached" in resp_text:
+                    # 這是指「同時存在的聲音數量」限制，刪除舊的再試一次
+                    get_resp = requests.get("https://api.elevenlabs.io/v1/voices", headers=headers)
+                    if get_resp.status_code == 200:
+                        for v in get_resp.json().get("voices", []):
+                            if v.get("category") == "cloned":
+                                requests.delete(f"https://api.elevenlabs.io/v1/voices/{v['voice_id']}", headers=headers)
+                    
+                    # 重新嘗試
+                    with open(filepath, "rb") as audio_f:
+                        files_upload = {"files": ("audio.webm", audio_f, "audio/webm")}
+                        response1 = requests.post("https://api.elevenlabs.io/v1/voices/add", headers=headers, files=files_upload, data=data)
+                    
+                    if response1.status_code == 200:
+                        voice_id = response1.json()["voice_id"]
+                    else:
+                        voice_id = DEFAULT_VOICE_ID # 二次失敗也用預設
+                else:
+                    # 其他錯誤也先用預設，避免前端崩潰
+                    logger.error(f"❌ [Voice Add Error] {resp_text}")
+                    voice_id = DEFAULT_VOICE_ID
+            else:
+                voice_id = response1.json()["voice_id"]
 
-        voice_id = response1.json()["voice_id"]
+            # 存入快取 (如果我們打算在 session 期間保留它)
+            if ride_id and voice_id != DEFAULT_VOICE_ID:
+                session_voice_ids[ride_id] = voice_id
 
+        # [步驟 3] 執行 TTS
         tts_url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-        tts_data = {"text": text, "model_id": "eleven_monolingual_v1"}
+        # 建議使用 multilingual v2 模型以獲得更好的跨語言效果
+        tts_data = {
+            "text": text, 
+            "model_id": "eleven_multilingual_v2",
+            "voice_settings": {
+                "stability": 0.5,
+                "similarity_boost": 0.75
+            }
+        }
+        
+        logger.info(f"🔊 [TTS] Generating audio with voice {voice_id}...")
         response2 = requests.post(tts_url, json=tts_data, headers=headers)
         
-        requests.delete(f"https://api.elevenlabs.io/v1/voices/{voice_id}", headers=headers)
-
         if response2.status_code != 200:
+            logger.error(f"❌ [TTS Error] {response2.text}")
             return JSONResponse(status_code=500, content={"message": f"ElevenLabs TTS Error: {response2.text}"})
 
         output_path = "/tmp/clone_output.mp3"
