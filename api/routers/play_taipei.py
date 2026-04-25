@@ -153,6 +153,33 @@ def filter_pois(tags: List[str], weather: str, current_time: str) -> List[Dict[s
     candidates.sort(key=lambda x: x["score"], reverse=True)
     return candidates[:3]
 
+import urllib.request
+import urllib.parse
+import re
+
+def scrape_duckduckgo(query: str) -> str:
+    try:
+        if len(query) < 2 or query in ["你好", "掰掰", "hello", "hi"]:
+            return ""
+            
+        search_query = f"台北 {query[:20]} 推薦"
+        data = urllib.parse.urlencode({'q': search_query}).encode('utf-8')
+        req = urllib.request.Request('https://lite.duckduckgo.com/lite/', data=data, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+        html = urllib.request.urlopen(req, timeout=3.0).read().decode('utf-8')
+        
+        # Regex to find all <td class='result-snippet'>...</td>
+        snippets = []
+        for match in re.finditer(r"class='result-snippet'[^>]*>(.*?)</td>", html, flags=re.S):
+            text = re.sub(r'<[^>]+>', '', match.group(1)).strip()
+            if text:
+                snippets.append(text)
+                
+        if snippets:
+            return "\n".join(snippets[:5])
+    except Exception as e:
+        pass
+    return ""
+
 def get_social_context() -> str:
     """獲取熱門社交情緒摘要"""
     if not SOCIAL_SENTIMENT: # Now works if it is list or dict
@@ -186,11 +213,16 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         poi_str = ", ".join([p['name'] for p in best_pois]) if best_pois else "無推薦景點"
         
         # --- 優化點 2: 使用明確字串替換指令 ---
+        
+        web_search = scrape_duckduckgo(request.user_text)
         system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.replace(
             "{poi_str}", poi_str
         ).replace(
             "{social_context}", social_context
+        ).replace(
+            "{web_search}", web_search
         )
+
         
         # 組合歷史與當前問題
         prompt_parts = [system_instruction]
