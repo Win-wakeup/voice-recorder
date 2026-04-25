@@ -342,7 +342,10 @@ function renderCurrentCard() {
                 </div>
                 <div style="flex: 1; overflow-y: auto;">
                     <p style="line-height: 1.6; color: #374151; font-size: 0.95rem;">${poi.description}</p>
-                    <p style="font-size: 0.85rem; color: #6b7280; margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db;"><i class="fas fa-map-marker-alt"></i> ${poi.address}</p>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db;">
+                        <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 5px;"><i class="fas fa-map-marker-alt"></i> ${poi.address}</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(poi.name)}" target="_blank" style="display: inline-block; font-size: 0.8rem; background: #e0e7ff; color: #4338ca; padding: 4px 10px; border-radius: 12px; text-decoration: none;"><i class="fas fa-map"></i> 在 Google Maps 上查看</a>
+                    </div>
                 </div>
             </div>
         </div>
