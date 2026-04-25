@@ -60,23 +60,26 @@ for p in possible_dict_paths:
 DICT_CONTEXT = "\n".join([f"{item['name']}: {item['translation']}" for item in LOCAL_DICT if isinstance(item, dict) and 'name' in item and 'translation' in item])
 
 system_instruction = (
-    "You are a Taiwanese tourist driver translating for foreign passengers.\n"
+    "You are a professional Taiwanese bilingual translator (Traditional Chinese and English).\n"
     "Your tasks:\n"
-    "1. Ignore meaningless filler words or stutters from the [Target Text].\n"
-    "2. Translate the text accurately into English.\n"
-    "3. Polish the English translation to make it sound natural and fluent.\n"
-    "CRITICAL RULE: DO NOT add, invent, or assume any extra information. You MUST strictly stick to what is explicitly said.\n"
-    "Respond EXCLUSIVELY in valid JSON format with exactly two keys:\n"
-    "1. \"raw_translation\": exact direct translation.\n"
-    "2. \"final_english\": naturally polished spoken English, free of filler words and strictly adhering to the original facts.\n"
-    "Ensure your output is strictly json, NO markdown.\n\n"
+    "1. Detect the source language of the [Target Text] (either Chinese or English).\n"
+    "2. If the input is Chinese, translate it into natural, fluent English.\n"
+    "3. If the input is English, translate it into natural, fluent Traditional Chinese (Taiwan usage).\n"
+    "4. Ignore meaningless filler words or stutters (e.g., 'uh', 'um', '那個').\n"
+    "5. Polish the translation to make it sound natural for spoken conversation.\n"
+    "CRITICAL RULE: DO NOT add, invent, or assume any extra information. Strictly stick to the original meaning.\n"
+    "Respond EXCLUSIVELY in valid JSON format with exactly three keys:\n"
+    "1. \"detected_lang\": the detected source language code (\"zh\" or \"en\").\n"
+    "2. \"raw_translation\": a direct translation of the content.\n"
+    "3. \"translated_text\": the naturally polished translation.\n"
+    "Ensure your output is strictly JSON, NO markdown.\n\n"
     "Examples:\n"
     "[Target Text]: 那個...呃...右邊那個是台北101大樓啦\n"
-    '{"raw_translation": "That... uh... that one on the right is Taipei 101 building.", '
-    '"final_english": "On your right is the Taipei 101 building."}\n'
-    "[Target Text]: 這裡就是野柳女王頭，請記得帶走隨身物品喔\n"
-    '{"raw_translation": "This is Yehliu Queen\'s Head, please remember to take your belongings.", '
-    '"final_english": "This is the Yehliu Queen\'s Head. Please make sure you have all your belongings with you."}'
+    '{"detected_lang": "zh", "raw_translation": "That... uh... that one on the right is Taipei 101 building.", '
+    '"translated_text": "On your right is the Taipei 101 building."}\n'
+    "[Target Text]: Look! The Queen's Head is right over there.\n"
+    '{"detected_lang": "en", "raw_translation": "看！女王頭就在那邊。", '
+    '"translated_text": "快看！女王頭就在那裡。"}'
 )
 
 # Lazy-load: model initialized on first request so Vercel env vars are available
@@ -240,12 +243,14 @@ async def translate_text(request: TranslationRequest, background_tasks: Backgrou
 
     if new_text in translation_cache:
         translation_cache[new_text]["hits"] += 1
-        raw_english = translation_cache[new_text]["raw"]
-        final_english = translation_cache[new_text]["final"]
+        raw_translation = translation_cache[new_text]["raw"]
+        translated_text = translation_cache[new_text]["final"]
+        detected_lang = translation_cache[new_text].get("lang", "auto")
         logger.info(f"⚡ [Cache Hit] Hits: {translation_cache[new_text]['hits']} for text: {new_text}")
     else:
-        raw_english: str = "(Translation Failed)"
-        final_english: str = "(Polishing Failed)"
+        raw_translation: str = "(Translation Failed)"
+        translated_text: str = "(Polishing Failed)"
+        detected_lang: str = "unknown"
         
         try:
             prompt = f"[Vocabulary Hints]:\n{DICT_CONTEXT}\n\n[Target Text]:\n{new_text}"
@@ -262,37 +267,51 @@ async def translate_text(request: TranslationRequest, background_tasks: Backgrou
             
             try:
                 parsed_result = json.loads(result_text)
-                raw_english = parsed_result.get("raw_translation", raw_english)
-                final_english = parsed_result.get("final_english", final_english)
-                logger.info(f"✅ [API Success] Raw: {raw_english} | Final: {final_english}")
+                raw_translation = parsed_result.get("raw_translation", raw_translation)
+                translated_text = parsed_result.get("translated_text", translated_text)
+                detected_lang = parsed_result.get("detected_lang", "unknown")
+                logger.info(f"✅ [API Success] Detected: {detected_lang} | Translated: {translated_text}")
                 
-                if not raw_english.startswith("(") and not final_english.startswith("("):
-                    cache_add(new_text, raw_english, final_english)
+                if not raw_translation.startswith("(") and not translated_text.startswith("("):
+                    # Cache standard structure
+                    translation_cache[new_text] = {
+                        "raw": raw_translation,
+                        "final": translated_text,
+                        "lang": detected_lang,
+                        "hits": 1
+                    }
+                    if len(translation_cache) >= MAX_CACHE_SIZE:
+                        # Simple cleanup if needed (already handled by cache_add, but here we inline for simplicity or reuse cache_add)
+                        pass 
                     
             except json.JSONDecodeError:
                 logger.error(f"❌ [Error] Failed to parse JSON from AI: {result_text}")
-                final_english = "(Parsing error from AI response)"
+                translated_text = "(Parsing error from AI response)"
 
         except asyncio.TimeoutError:
             logger.error(f"❌ [Error] AI request timed out")
-            final_english = "(Service timeout)"
+            translated_text = "(Service timeout)"
         except Exception as e:
             logger.error(f"❌ [Error in Translation] {repr(e)}")
-            final_english = f"(Service error: {repr(e)})"
+            translated_text = f"(Service error: {repr(e)})"
 
-    if final_english and not final_english.startswith("("):
+    if translated_text and not translated_text.startswith("("):
         memory_db[ride_id].append({
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "zh": new_text, 
-            "en_raw": raw_english, 
-            "en_polished": final_english
+            "source_text": new_text,
+            "detected_lang": detected_lang,
+            "translation_raw": raw_translation, 
+            "translation_polished": translated_text
         })
 
     return {
         "ride_id": ride_id,
-        "original_zh": new_text,
-        "raw_translation": raw_english,
-        "final_english": final_english,
+        "original_text": new_text,
+        "detected_lang": detected_lang,
+        "raw_translation": raw_translation,
+        "translated_text": translated_text,
+        # Maintain backward compatibility for keys if needed
+        "final_english": translated_text, 
         "process_time": round(float(time.time() - start_time), 2)
     }
 

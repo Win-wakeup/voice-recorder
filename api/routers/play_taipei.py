@@ -165,7 +165,7 @@ async def play_taipei_query(request: QueryRequest):
             "}\n"
             "規則：\n"
             "1. 如果使用者只是在寒暄，itinerary 可以是空陣列。\n"
-            "2. translation 欄位：如果是中文就原封不動，如果是英文就翻中文；en 欄位同理。\n"
+            "2. translation 欄位：請自動偵測使用者輸入的語言。如果輸入是中文，zh 欄位保留原文，並將其翻譯成英文填入 en 欄位；如果輸入是英文，en 欄位保留原文，並將其翻譯成中文填入 zh 欄位。\n"
             f"3. 參考景點：{poi_str}\n"
             f"4. 今日社群話題：\n{social_context}\n"
         )
