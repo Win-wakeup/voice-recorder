@@ -113,11 +113,7 @@ function POI_Time_String(poi) {
 }
 
 function renderSubtitles(translationObj) {
-    if (!translationObj) return;
-    const board = document.getElementById('subtitle-board');
-    board.style.display = 'block';
-    document.getElementById('sub-zh').innerText = translationObj.zh || "";
-    document.getElementById('sub-en').innerText = translationObj.en || "";
+    // Disabled: Handled natively by Chat Bubble addChatBubble() function now
 }
 
 // --- 核心音訊錄製與微服務連鎖打點 ---
@@ -145,7 +141,7 @@ async function startRecording(e) {
         setMicState(true);
         showStatus("聽您說話中...");
         
-        document.getElementById('subtitle-board').style.display = 'none';
+        
         document.getElementById('itinerary-display').innerHTML = '';
     } catch (err) {
         console.error("無法存取麥克風", err);
@@ -266,111 +262,6 @@ async function processVoiceData() {
     }
     await handleUserInput("", audioBlob);
 }
-/*
-    toggleMicButton(false);
-    showStatus("AI 處理中...");
-    
-    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-
-    // ✨ Cleanup microphone stream track to free hardware
-    if (mediaRecorder && mediaRecorder.stream) {
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-    }
-
-    if (audioBlob.size < 1000) {
-        showStatus("錄音時間太短，請按住重新說話！");
-        toggleMicButton(true);
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recording.webm");
-
-    try {
-        const sttRes = await fetch("/api/stt", { method: "POST", body: formData });
-        const sttData = await sttRes.json();
-        
-        if (sttData.status === "error") {
-            throw new Error("STT 語音辨識失敗：" + (sttData.error || "未知錯誤"));
-        }
-        
-        const userText = sttData.text;
-        console.log("辨識結果：", userText);
-
-        showStatus("定位中...");
-        const gpsCoords = await getCurrentGPS();
-        const currentTime = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, '0');
-
-        showStatus("載入即時情境與社群情報...");
-        const contextResToB = await fetch("/api/fetch_context", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                time: currentTime, 
-                weather: "晴天" 
-            })
-        });
-        const dataB = await contextResToB.json();
-        const validPois = dataB.valid_pois || [];
-        const trending = dataB.social_trends || [];
-
-        showStatus("AI 規劃行程中...");
-        const currentUserId = "dino"; 
-        
-        const llmResToA = await fetch("/api/play_taipei/query", {
-            method: "POST", headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                user_text: userText, 
-                tags: selectedTags,
-                session_id: currentUserId,
-                context: { 
-                    lat: gpsCoords.lat, 
-                    lng: gpsCoords.lng, 
-                    current_time: currentTime, 
-                    weather: "Sunny" 
-                }
-            })
-        });
-        const llmFinalData = await llmResToA.json();
-
-        if (!llmFinalData || llmFinalData.status === "error" || llmFinalData.detail) {
-            throw new Error("大腦運算失敗：" + (llmFinalData.detail || ""));
-        }
-
-        renderSubtitles(llmFinalData.translation);
-        if (llmFinalData.itinerary && llmFinalData.itinerary.length > 0) {
-            renderTimeline(llmFinalData.itinerary, gpsCoords);
-        }
-
-        showStatus("為您語音播報...");
-        const ttsFormData = new FormData();
-        ttsFormData.append("voice_id", "21m00Tcm4TlvDq8ikWAM"); 
-        ttsFormData.append("text", llmFinalData.voice_script || llmFinalData.translation.en || "");
-
-        const ttsRes = await fetch("/api/tts", { 
-            method: "POST", 
-            body: ttsFormData 
-        });
-        
-        if (!ttsRes.ok) {
-            const errBody = await ttsRes.text();
-            throw new Error(`TTS API 錯誤 (${ttsRes.status}): ${errBody}`);
-        }
-        
-        const mp3Blob = await ttsRes.blob();
-        const audio = new Audio(URL.createObjectURL(mp3Blob));
-        await audio.play();
-        
-        showStatus("導覽完畢！有問題隨時問我！");
-
-    } catch (e) {
-        console.error(e);
-        showStatus("發生異常：" + e.message);
-    } finally {
-        toggleMicButton(true);
-    }
-}
-
 // ==========================================
 // Chat UI 歷史冒泡功能
 // ==========================================
