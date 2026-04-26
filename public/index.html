@@ -92,13 +92,13 @@
             <a href="/play_taipei.html" class="module-btn btn-play">
                 🗺️ AI 在地嚮導 (Play Taipei)
             </a>
-
-            <button class="logout-link" onclick="logout()">登出</button>
         </div>
     </div>
     
     <script>
         window.onload = function () {
+            // [Hackathon] 自動一鍵通關，連首頁按鈕都不用按了
+            bypassLogin();
             let clientId = "970732083734-28k4jtivkvrdcuf314sp3d1c3ltfn9oj.apps.googleusercontent.com"; // Localhost
             if (window.location.hostname.includes('vercel.app')) {
                 clientId = "970732083734-j5s5c6dnakt75ds6bhsu0lqr0b41lcbg.apps.googleusercontent.com"; // Vercel
@@ -111,15 +111,12 @@
                 return;
             }
 
-            google.accounts.id.initialize({
-                client_id: clientId,
-                callback: handleGoogleLogin,
-                auto_prompt: false
-            });
-            google.accounts.id.renderButton(
-                document.getElementById("google_btn_container"),
-                { theme: "outline", size: "large", type: "standard", shape: "rectangular", text: "signin_with", logo_alignment: "center" }
-            );
+            // [Hackathon] 拔除 Google 登入，改用免登入按鈕
+            document.getElementById("google_btn_container").innerHTML = `
+                <button onclick="bypassLogin()" style="width: 100%; padding: 15px; margin-top: 10px; background: #2563eb; color: white; border: none; border-radius: 12px; font-size: 1.2rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(37,99,235,0.4);">
+                    🚀 免登入直接試玩 (Hackathon Mode)
+                </button>
+            `;
         };
 
         function decodeJwtResponse(token) {
@@ -135,6 +132,12 @@
             localStorage.setItem('currentUserName', payload.name);
             
             showModulesMenu(payload.name);
+        }
+
+        function bypassLogin() {
+            localStorage.setItem('currentUser', 'guest_999');
+            localStorage.setItem('currentUserName', '黑客松評審');
+            showModulesMenu('黑客松評審');
         }
 
         function showModulesMenu(userName) {

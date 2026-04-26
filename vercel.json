@@ -3,7 +3,7 @@
   "builds": [
     { "src": "server.js", "use": "@vercel/node" },
     { "src": "api/upload.js", "use": "@vercel/node" },
-    { "src": "api/index.py", "use": "@vercel/python" }
+    { "src": "api/index.py", "use": "@vercel/python", "config": { "maxDuration": 60 } }
   ],
   "routes": [
     { "src": "/api/upload", "dest": "/api/upload.js" },

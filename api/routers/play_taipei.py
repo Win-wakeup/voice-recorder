@@ -29,13 +29,13 @@ class QueryRequest(BaseModel):
     context: ContextData = Field(default_factory=ContextData)
 
 class ItineraryItem(BaseModel):
-    name: str
+    name: Optional[str] = ""
     time: Optional[str] = ""
     price: Optional[str] = ""
     distance: Optional[str] = ""
-    address: str = ""
-    description: str
-    image_url: str = ""
+    address: Optional[str] = ""
+    description: Optional[str] = ""
+    image_url: Optional[str] = ""
 
 class Translation(BaseModel):
     zh: str
@@ -44,6 +44,7 @@ class Translation(BaseModel):
 class QueryResponse(BaseModel):
     status: str = "success"
     requires_clarification: bool = False
+    is_itinerary: bool = False
     translation: Translation
     voice_script: str
     quick_replies: List[str] = Field(default_factory=list)
@@ -53,6 +54,8 @@ class QueryResponse(BaseModel):
 # 2. Configuration & Memory
 # ==========================================
 
+from dotenv import load_dotenv
+load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 TTS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "zrHiDhphv9ZnVXBqCLjz") # 從環境變數讀取，預設為 Mimi
@@ -81,10 +84,11 @@ SOCIAL_SENTIMENT = load_json(SENTIMENT_PATH)
 SYSTEM_INSTRUCTION_TEMPLATE = (
     "你是一名專業台灣導遊。採用『漸進式探詢』與『Swipe 卡片挑選』機制。\n"
     "嚴格遵守以下規則：\n"
-    "1. 意圖歸納與寬鬆提問：若缺乏【明確地點】或【明確主體】，必須親切地追問(`requires_clarification=true`)。但如果使用者已提供足夠資訊(如: 某區+拉麵)，請立刻停止發問直接給名單！並從對話抓出他這趟旅程預計要去『幾個』地點，寫在 `expected_target_count` 中 (例如只說吃拉麵，就是 1)。\n"
-    "2. ⚠️【強制網路爬蟲驗證】：你已成功連接 Google Search！你必須，也絕對必須利用 Google Search 查出真實、活生生在該區域的店面名稱與資訊！不准憑空捏造(如拉麵Davidson)！"
-    "3. ⚠️【業務範圍】：僅支援『北北基』(台北/新北/基隆)，超出範圍請設 requires_clarification=true 並委婉拒絕。\n"
-    "4. 精確交通指引：請在 `address` 欄位填入爬取到的【真實地址】，不可捏造！並必須利用傳入的 GPS 座標資訊，在 `distance` 欄位給出合理的【🚗開車時間】與【🚌大眾運輸時間】預估，如果能附加上哪一站最佳！\n"
+    "1. 嚴格漸進式探詢：你【必須】收集到四大要素：『地點』、『種類』、『預算或價位』、『幾個人去』。即使使用者已說了某區+拉麵，只要還沒問到人數與預算，你【絕對必須】設 requires_clarification=true，並親切追問：『大概的預算落在哪裡呢？有幾位要一起去呢？』直到四個要素全部都收集完了，才能給名單！\n"
+    "2. ⚠️【強制真實店家驗證】：你已經開啟雙活網路爬蟲！請你『絕對只能』從下方 [來自 Google Maps 的真實資料] 或 [來自網路爬蟲的真實資料] 中挑選出明確的店家並推薦！『絕對不可以憑空捏造任何店名』！資料裡沒寫的名字就不准掰！\n"
+    "2B. 【行程表模式 vs 挑卡模式切換關鍵】：只要使用者在一句話中『同時要求兩種以上的不同活動』（例如：逛街+午餐+溜冰，或是 晚餐+看夜景），或者明確要求『一日遊、行程表』時，請務必立刻切換為【行程表模式】（將 JSON 中的 `is_itinerary` 設為 true）！並且在 `swipe_candidates` 陣列中給出【滿足所有活動的完美時間軸】！『絕對不可以把它當成挑卡模式而只給兩三張卡片』！\n"
+    "3. ⚠️【業務範圍】：涵蓋大台北生活圈。只要 GPS 或文字提示在『北北基桃』範圍內，絕對不可拒絕服務，必須立刻利用搜尋功能進行推薦！只有在完全無關（如屏東或國外）時才可以委婉拒絕。\n"
+    "5. ⚡️【挑卡模式最高原則】：如果『不是』行程表模式（代表使用者只想要找『單一種類』的東西，例如純粹找晚餐），請為了滑動體驗一次大方給出 **5 到 6 個**選項！嚴格警告：這 5~6 個選項必須是【相同分類】！『絕對禁止重複出現同一間店』！！！如果爬蟲資料中找不到剛好符合預算的，可以找接近的優質店家並在價格欄位註明，絕不可敷衍給太少！\n"
     "你的回覆必須是嚴格 JSON。\n"
     "JSON Schema 如下：\n"
     "{\n"
@@ -98,6 +102,7 @@ SYSTEM_INSTRUCTION_TEMPLATE = (
     "  ]\n"
     "}\n"
     "- 社群話題：\n{social_context}\n"
+    "- 網路即時搜尋資料與商家資訊：\n{web_search}\n"
 )
 
 GUIDE_MODEL = genai.GenerativeModel(
@@ -159,9 +164,106 @@ import urllib.parse
 import re
 
 def scrape_duckduckgo(query: str) -> str:
+    import urllib.request, urllib.parse, re
+    try:
+        if len(query) < 2 or query in ["你好", "掰掰", "hello", "hi"]: return ""
+        import datetime
+        search_query = f"{query[:20]} {datetime.datetime.now().year} 最新 仍在營業 推薦 新北 台北" 
+        data = urllib.parse.urlencode({'q': search_query}).encode('utf-8')
+        req = urllib.request.Request('https://lite.duckduckgo.com/lite/', data=data, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0)'})
+        html = urllib.request.urlopen(req, timeout=1.5).read().decode('utf-8')
+        snippets = []
+        for match in re.finditer(r"class='result-snippet'[^>]*>(.*?)</td>", html, flags=re.S):
+            text = re.sub(r'<[^>]+>', '', match.group(1)).strip()
+            if text: snippets.append(text)
+        return "\n".join(snippets[:5]) if snippets else ""
+    except Exception:
+        return ""
+
+def get_grounding_context(query: str, lat: float=None, lng: float=None) -> str:
+    import concurrent.futures
+    ddg_text = ""
+    places_text = ""
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        future_ddg = executor.submit(scrape_duckduckgo, query)
+        future_places = None
+        if lat and lng:
+            future_places = executor.submit(search_google_places, query, lat, lng)
+            
+        try:
+            ddg_text = future_ddg.result()
+            if future_places:
+                places_text = future_places.result()
+        except:
+            pass
+
+    combined = ""
+    if places_text:
+        combined += places_text + "\n"
+    if ddg_text:
+        combined += ddg_text
+        
+    return combined
+
+def search_google_places(query: str, lat: float=None, lng: float=None) -> str:
+    """Uses Google Places API for 100% accurate location grounding"""
+    import urllib.request
+    import urllib.parse
+    import json
+    
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    if not api_key:
+        return ""
+        
     try:
         if len(query) < 2 or query in ["你好", "掰掰", "hello", "hi"]:
             return ""
+            
+        url = "https://places.googleapis.com/v1/places:searchText"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.priceLevel,places.rating,places.userRatingCount"
+        }
+        
+        # 強制加入地點提示
+        payload = {
+            "textQuery": f"{query[:50]}",
+            "languageCode": "zh-TW",
+            "maxResultCount": 10
+        }
+        
+        if lat and lng:
+            payload["locationBias"] = {
+                "circle": {
+                    "center": {"latitude": lat, "longitude": lng},
+                    "radius": 5000.0 # 5km
+                }
+            }
+            
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers=headers)
+        
+        with urllib.request.urlopen(req, timeout=2.0) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            
+        places = result.get("places", [])
+        if not places:
+            return "沒有找到符合的實體店家。"
+            
+        text_snippets = ["【來自 Google Maps 的真實資料】"]
+        for p in places:
+            name = p.get("displayName", {}).get("text", "Unknown")
+            addr = p.get("formattedAddress", "查無地址")
+            rating = p.get("rating", "無評分")
+            reviews = p.get("userRatingCount", 0)
+            text_snippets.append(f"店名: {name} | 地址: {addr} | 評分: {rating} ({reviews}則評論)")
+            
+        return "\n".join(text_snippets)
+    except Exception as e:
+        return ""
+
             
         # Enforce Geofence & Recency & Viability
         import datetime
@@ -169,7 +271,7 @@ def scrape_duckduckgo(query: str) -> str:
         search_query = f"{query[:20]} {current_year} 最新 仍在營業 推薦 台北 新北 基隆" 
         data = urllib.parse.urlencode({'q': search_query}).encode('utf-8')
         req = urllib.request.Request('https://lite.duckduckgo.com/lite/', data=data, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-        html = urllib.request.urlopen(req, timeout=3.0).read().decode('utf-8')
+        html = urllib.request.urlopen(req, timeout=1.5).read().decode('utf-8')
         
         # Regex to find all <td class='result-snippet'>...</td>
         snippets = []
@@ -201,7 +303,7 @@ def get_social_context() -> str:
 # ==========================================
 
 @router.post("/query", response_model=QueryResponse)
-async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest):
+def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest):
     try:
         # 1. 篩選景點與獲取輿情
         best_pois = filter_pois(request.tags, request.context.weather, request.context.current_time)
@@ -218,7 +320,14 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         
         # --- 優化點 2: 使用明確字串替換指令 ---
         
-        web_search = scrape_duckduckgo(request.user_text)
+        # 把對話記憶結合起來搜尋，避免只搜到「我在三峽」而丟失「拉麵」上下文
+        search_ctx = request.user_text
+        if history:
+            # 必須把過去三輪的全部對話結合起來，才不會把「拉麵」這個關鍵意圖洗掉
+            recent_msgs = [m['user'] for m in history[-3:]]
+            search_ctx = " ".join(recent_msgs) + " " + request.user_text
+        web_search = get_grounding_context(search_ctx, request.context.lat, request.context.lng)
+        print("\n\n=========== GOOGLE MAPS FETCH ===========\n" + str(web_search) + "\n=======================================\n\n")
         system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.replace(
             "{poi_str}", poi_str
         ).replace(
@@ -246,6 +355,7 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         # --- 優化點 3: 使用共用的模型實例 ---
         response = GUIDE_MODEL.generate_content(full_prompt)
         ai_raw_response = response.text
+        print("\n=== RAW AI ===\n", ai_raw_response, "\n=============\n")
         
         # Strip potential markdown block
         clean_json = ai_raw_response.strip()
@@ -259,38 +369,46 @@ async def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest)
         
         try:
             result = json.loads(clean_json)
-
-            # --- 動態反哺寫入機制 ---
-            from api.index import LOCAL_DICT as TAIPEI_DICT
-            import os
-            
-            new_pois_added = False
-            if "swipe_candidates" in result and isinstance(result["swipe_candidates"], list):
-                if isinstance(TAIPEI_DICT, dict):
-                    dict_names = list(TAIPEI_DICT.keys())
-                else:
-                    dict_names = [p.get("name", "") for p in TAIPEI_DICT]
-                
-                for item in result["swipe_candidates"]:
-                    p_name = item.get("name")
-                    if p_name and p_name not in dict_names:
-                        new_entry = {"name": p_name, "translation": item.get("en", p_name), "tags": ["🤖 AI推薦"]}
-                        if isinstance(TAIPEI_DICT, dict):
-                            TAIPEI_DICT[p_name] = item.get("en", p_name)
-                        else:
-                            TAIPEI_DICT.append(new_entry)
-                        new_pois_added = True
-            
-            if new_pois_added:
-                try:
-                    dict_path = os.path.join(os.path.dirname(__file__), "..", "taipei_dict.json")
-                    with open(dict_path, "w", encoding="utf-8") as f:
-                        json.dump(TAIPEI_DICT, f, ensure_ascii=False, indent=2)
-                except OSError:
-                    pass
         except json.JSONDecodeError:
-            logger.error(f"Failed to parse Gemini response: {ai_raw_response}")
-            raise HTTPException(status_code=500, detail="Gemini output is not valid JSON")
+            import re
+            match = re.search(r'\{.*\}', ai_raw_response, re.DOTALL)
+            if match:
+                try:
+                    result = json.loads(match.group(0))
+                except json.JSONDecodeError:
+                    raise HTTPException(status_code=500, detail="AI 回傳格式嚴重不正確無法修復")
+            else:
+                logger.error(f"Failed to parse Gemini response: {ai_raw_response}")
+                raise HTTPException(status_code=500, detail="Gemini output is not valid JSON")
+
+        # --- 動態反哺寫入機制 ---
+        from api.index import LOCAL_DICT as TAIPEI_DICT
+        import os
+        
+        new_pois_added = False
+        if "swipe_candidates" in result and isinstance(result["swipe_candidates"], list):
+            if isinstance(TAIPEI_DICT, dict):
+                dict_names = list(TAIPEI_DICT.keys())
+            else:
+                dict_names = [p.get("name", "") for p in TAIPEI_DICT]
+            
+            for item in result["swipe_candidates"]:
+                p_name = item.get("name")
+                if p_name and p_name not in dict_names:
+                    new_entry = {"name": p_name, "translation": item.get("en", p_name), "tags": ["🤖 AI推薦"]}
+                    if isinstance(TAIPEI_DICT, dict):
+                        TAIPEI_DICT[p_name] = item.get("en", p_name)
+                    else:
+                        TAIPEI_DICT.append(new_entry)
+                    new_pois_added = True
+        
+        if new_pois_added:
+            try:
+                dict_path = os.path.join(os.path.dirname(__file__), "..", "taipei_dict.json")
+                with open(dict_path, "w", encoding="utf-8") as f:
+                    json.dump(TAIPEI_DICT, f, ensure_ascii=False, indent=2)
+            except OSError:
+                pass
         
         # 5. 更新對話記憶
         session_db[request.session_id].append({

@@ -194,10 +194,15 @@ async function handleUserInput(textInput) {
             // Stage 2: AI has collected enough constraints and generated pool
             addChatBubble("ai", llmFinalData.voice_script || "我已經挑選出一些最棒的選項了，請從畫廊中確認！");
             
-            // Render gallery
+            // Render gallery or directly show itinerary if the user asked for a schedule
             if(llmFinalData.swipe_candidates && llmFinalData.swipe_candidates.length > 0) {
-                renderGallery(llmFinalData.swipe_candidates);
-                showView('gallery-view');
+                if (llmFinalData.is_itinerary === true) {
+                    renderTimeline(llmFinalData.swipe_candidates, {lat: gpsCoords.lat, lng: gpsCoords.lng});
+                    showView('itinerary-view');
+                } else {
+                    renderGallery(llmFinalData.swipe_candidates);
+                    showView('gallery-view');
+                }
             } else {
                  addChatBubble("ai", "抱歉，目前找不到符合您條件的地點。");
                  showStatus("請更改條件後再試一次！");

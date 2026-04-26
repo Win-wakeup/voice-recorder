@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-04-25T14:48:31.235440",
+  "updated_at": "2026-04-26T09:04:46.314418",
   "trending_topics": [
     {
       "source": "Mock_Integration_100",
       "title": "野柳女王頭 (新北市萬里區港東路)",
       "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
       "title": "野柳地質公園 (新北市萬里區港東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -30,7 +30,7 @@
     {
       "source": "Mock_Integration_100",
       "title": "九份老街 (新北市瑞芳區基山街)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "晴天",
       "tags": [
@@ -39,27 +39,27 @@
         "📸 熱門打卡"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
-      "title": "阿妹茶樓 (台北市南港區忠孝東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "雨天皆可",
+      "title": "阿妹茶樓 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 180
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "十分老街 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
+      "link": "https://www.ptt.cc/bbs/Taipei",
       "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
@@ -67,14 +67,14 @@
         "☕ 文青散策"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "十分瀑布 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "title": "十分瀑布 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -88,143 +88,143 @@
       "title": "平溪天燈 (新北市板橋區縣民大道)",
       "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "陰天或涼爽天氣",
+      "suitable_weather": "晴天",
       "tags": [
         "📸 熱門打卡"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
       "title": "淡水老街 (新北市淡水區中正路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "晴天",
-      "tags": [
-        "⛩️ 歷史古蹟",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "漁人碼頭 (新北市淡水區中正路)",
       "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 180
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "淡水阿給 (新北市淡水區中正路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "淡水鐵蛋 (新北市淡水區中正路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "晴天",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "紅毛城 (新北市淡水區中正路)",
-      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
+      "open_hours": "10:00-20:00",
+      "is_open_now": false,
+      "average_cost": 120
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "漁人碼頭 (新北市淡水區中正路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "十三行博物館 (台北市中山區南京東路)",
-      "link": "https://www.dcard.tw/f/travel",
+      "title": "淡水阿給 (新北市淡水區中正路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "淡水鐵蛋 (新北市淡水區中正路)",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "11:00-21:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "紅毛城 (新北市淡水區中正路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
+      "tags": [
+        "⛩️ 歷史古蹟",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "十三行博物館 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🖼️ 室內展覽"
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 150
+      "average_cost": 350
     },
     {
       "source": "Mock_Integration_100",
-      "title": "八里左岸 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "title": "八里左岸 (台北市大安區和平東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
       "title": "烏來老街 (新北市烏來區瀑布路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 120
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
       "title": "烏來台車 (新北市烏來區瀑布路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "雨天皆可",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
       "tags": [
         "👨‍👩‍👧 親子體驗"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 400
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "金山老街 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -236,7 +236,7 @@
     {
       "source": "Mock_Integration_100",
       "title": "金山鴨肉 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
@@ -244,7 +244,7 @@
       ],
       "open_hours": "00:00-24:00",
       "is_open_now": true,
-      "average_cost": 150
+      "average_cost": 300
     },
     {
       "source": "Mock_Integration_100",
@@ -257,96 +257,96 @@
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 250
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "林本源園邸 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "晴天",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "新北歡樂耶誕城 (台北市大安區和平東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "title": "新北歡樂耶誕城 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 180
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "三峽老街 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
-      "title": "金牛角麵包 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
+      "title": "金牛角麵包 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
       "title": "鶯歌陶瓷老街 (台北市南港區忠孝東路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 180
+      "is_open_now": false,
+      "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
       "title": "烘爐地 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "碧潭風景區 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "title": "碧潭風景區 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -358,48 +358,48 @@
     {
       "source": "Mock_Integration_100",
       "title": "菁桐車站 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "猴硐貓村 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "雨天皆可",
+      "title": "猴硐貓村 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
       "tags": [
         "👨‍👩‍👧 親子體驗"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 400
     },
     {
       "source": "Mock_Integration_100",
-      "title": "陰陽海 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "title": "陰陽海 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "陰天或涼爽天氣",
+      "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 180
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "黃金博物館 (新北市瑞芳區基山街)",
-      "link": "https://www.dcard.tw/f/travel",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
@@ -407,13 +407,13 @@
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 350
+      "average_cost": 250
     },
     {
       "source": "Mock_Integration_100",
       "title": "黃金瀑布 (新北市瑞芳區基山街)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -424,8 +424,8 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "基隆廟口夜市 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "title": "基隆廟口夜市 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
@@ -434,40 +434,40 @@
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 300
+      "average_cost": 150
     },
     {
       "source": "Mock_Integration_100",
       "title": "大稻埕 (台北市大同區民生西路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "迪化街 (台北市大同區民生西路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
       "title": "霞海城隍廟 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
@@ -476,13 +476,13 @@
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 180
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "龍山寺 (台北市萬華區成都路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -494,36 +494,22 @@
     {
       "source": "Mock_Integration_100",
       "title": "剝皮寮 (台北市萬華區成都路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "陰天或涼爽天氣",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 120
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
       "title": "西門町 (台北市萬華區成都路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🛍️ 商圈購物",
-        "📸 熱門打卡"
-      ],
-      "open_hours": "17:00-23:59",
-      "is_open_now": false,
-      "average_cost": 300
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "西門紅樓 (台北市萬華區成都路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🛍️ 商圈購物",
@@ -532,6 +518,20 @@
       "open_hours": "17:00-23:59",
       "is_open_now": false,
       "average_cost": 500
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "西門紅樓 (台北市萬華區成都路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🛍️ 商圈購物",
+        "📸 熱門打卡"
+      ],
+      "open_hours": "17:00-23:59",
+      "is_open_now": false,
+      "average_cost": 300
     },
     {
       "source": "Mock_Integration_100",
@@ -549,8 +549,8 @@
     {
       "source": "Mock_Integration_100",
       "title": "華山1914 (台北市中正區八德路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -562,8 +562,8 @@
     {
       "source": "Mock_Integration_100",
       "title": "士林夜市 (台北市士林區基河路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食",
@@ -571,13 +571,13 @@
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 100
+      "average_cost": 150
     },
     {
       "source": "Mock_Integration_100",
       "title": "饒河夜市 (台北市松山區八德路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食",
@@ -585,13 +585,27 @@
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 100
+      "average_cost": 50
     },
     {
       "source": "Mock_Integration_100",
       "title": "寧夏夜市 (台北市大同區民生西路)",
       "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🍜 在地美食",
+        "📸 熱門打卡"
+      ],
+      "open_hours": "17:00-23:59",
+      "is_open_now": false,
+      "average_cost": 150
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "師大夜市 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食",
@@ -603,7 +617,7 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "師大夜市 (新北市板橋區縣民大道)",
+      "title": "南機場夜市 (台北市中山區南京東路)",
       "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
@@ -613,52 +627,25 @@
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 300
+      "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
-      "title": "南機場夜市 (台北市大安區和平東路)",
+      "title": "公館商圈 (台北市中山區南京東路)",
       "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🍜 在地美食",
-        "📸 熱門打卡"
-      ],
-      "open_hours": "17:00-23:59",
-      "is_open_now": false,
-      "average_cost": 300
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "公館商圈 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🛍️ 商圈購物"
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 500
+      "average_cost": 1000
     },
     {
       "source": "Mock_Integration_100",
       "title": "信義商圈 (台北市信義區信義路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🛍️ 商圈購物"
-      ],
-      "open_hours": "17:00-23:59",
-      "is_open_now": false,
-      "average_cost": 500
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "東區商圈 (台北市南港區忠孝東路)",
-      "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
@@ -666,107 +653,120 @@
       ],
       "open_hours": "17:00-23:59",
       "is_open_now": false,
-      "average_cost": 300
+      "average_cost": 1000
     },
     {
       "source": "Mock_Integration_100",
-      "title": "微風南山 (台北市大安區和平東路)",
-      "link": "https://www.dcard.tw/f/travel",
+      "title": "東區商圈 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🛍️ 商圈購物"
+      ],
+      "open_hours": "17:00-23:59",
+      "is_open_now": false,
+      "average_cost": 1000
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "微風南山 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
       "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
       ],
       "open_hours": "11:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "美麗華百樂園 (新北市板橋區縣民大道)",
+      "title": "美麗華百樂園 (台北市大安區和平東路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "11:00-22:00",
-      "is_open_now": true,
-      "average_cost": 120
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "台北小巨蛋 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🛍️ 商圈購物"
-      ],
-      "open_hours": "11:00-22:00",
-      "is_open_now": true,
-      "average_cost": 500
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "光華商場 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🛍️ 商圈購物"
-      ],
-      "open_hours": "17:00-23:59",
-      "is_open_now": false,
-      "average_cost": 1500
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "台北地下街 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "🎳 室內娛樂"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 600
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "永康街 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "雨天皆可",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 180
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "北投溫泉 (台北市北投區中山路)",
-      "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
+      "open_hours": "11:00-22:00",
+      "is_open_now": false,
+      "average_cost": 180
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "台北小巨蛋 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🛍️ 商圈購物"
+      ],
+      "open_hours": "11:00-22:00",
+      "is_open_now": false,
+      "average_cost": 1500
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "光華商場 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🛍️ 商圈購物"
+      ],
+      "open_hours": "17:00-23:59",
+      "is_open_now": false,
+      "average_cost": 500
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "台北地下街 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🎳 室內娛樂"
+      ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
+      "average_cost": 250
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "永康街 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "地熱谷 (台北市北投區中山路)",
+      "title": "北投溫泉 (台北市北投區中山路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 120
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "地熱谷 (台北市北投區中山路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -778,48 +778,7 @@
     {
       "source": "Mock_Integration_100",
       "title": "陽明山國家公園 (台北市北投區中山路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "晴天",
-      "tags": [
-        "🌲 自然戶外"
-      ],
-      "open_hours": "00:00-24:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "擎天崗 (台北市大安區和平東路)",
       "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "晴天",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 180
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "竹子湖 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "陰天或涼爽天氣",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 120
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "象山親山步道 (台北市信義區信義路)",
-      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
@@ -831,8 +790,36 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "大湖公園 (新北市板橋區縣民大道)",
-      "link": "https://www.dcard.tw/f/travel",
+      "title": "擎天崗 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 180
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "竹子湖 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "象山親山步道 (台北市信義區信義路)",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "晴天",
       "tags": [
@@ -844,8 +831,21 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "大安森林公園 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
+      "title": "大湖公園 (台北市大安區和平東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🌲 自然戶外"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "大安森林公園 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "晴天",
       "tags": [
@@ -857,8 +857,8 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "二二八和平公園 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
+      "title": "二二八和平公園 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "晴天",
       "tags": [
@@ -871,63 +871,63 @@
     {
       "source": "Mock_Integration_100",
       "title": "台北植物園 (台北市中正區八德路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "陰天或涼爽天氣",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 120
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "貓空纜車 (新北市板橋區縣民大道)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
-      "suitable_weather": "晴天",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "國民革命忠烈祠 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "貓空纜車 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
       "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
+      "title": "國民革命忠烈祠 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 120
+    },
+    {
+      "source": "Mock_Integration_100",
       "title": "中正紀念堂 (台北市中正區八德路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🖼️ 室內展覽"
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 0
+      "average_cost": 350
     },
     {
       "source": "Mock_Integration_100",
       "title": "國父紀念館 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🖼️ 室內展覽"
@@ -940,7 +940,7 @@
       "source": "Mock_Integration_100",
       "title": "故宮博物院 (台北市士林區基河路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
@@ -948,54 +948,54 @@
       ],
       "open_hours": "09:00-17:00",
       "is_open_now": true,
-      "average_cost": 0
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
       "title": "士林官邸 (台北市士林區基河路)",
       "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "圓山大飯店 (台北市大安區和平東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "title": "圓山大飯店 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "00:00-24:00",
       "is_open_now": true,
-      "average_cost": 100
+      "average_cost": 50
     },
     {
       "source": "Mock_Integration_100",
-      "title": "寶藏巖 (新北市板橋區縣民大道)",
+      "title": "寶藏巖 (台北市中山區南京東路)",
       "link": "https://www.dcard.tw/f/travel",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
-      "suitable_weather": "陰天或涼爽天氣",
+      "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
       "title": "台北當代藝術館 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🖼️ 室內展覽"
@@ -1006,9 +1006,9 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "袖珍博物館 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "title": "袖珍博物館 (台北市大安區和平東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🖼️ 室內展覽"
@@ -1019,37 +1019,37 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "林安泰古厝 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "title": "林安泰古厝 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 120
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "水湳洞 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "晴天",
+      "title": "水湳洞 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
       "title": "茶壺山 (新北市板橋區縣民大道)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
         "🌲 自然戶外"
@@ -1060,183 +1060,183 @@
     },
     {
       "source": "Mock_Integration_100",
-      "title": "鼻頭角 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "title": "鼻頭角 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "陰天或涼爽天氣",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "深坑老街 (台北市中山區南京東路)",
+      "title": "深坑老街 (台北市大安區和平東路)",
       "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "晴天",
       "tags": [
         "⛩️ 歷史古蹟",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-20:00",
-      "is_open_now": true,
-      "average_cost": 180
+      "is_open_now": false,
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
       "title": "深坑臭豆腐 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 300
+      "is_open_now": false,
+      "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
       "title": "白沙灣 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "00:00-24:00",
-      "is_open_now": true,
-      "average_cost": 180
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "淺水灣 (新北市板橋區縣民大道)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
-      "suitable_weather": "陰天或涼爽天氣",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "00:00-24:00",
-      "is_open_now": true,
-      "average_cost": 180
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "老梅綠石槽 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
-      "suitable_weather": "陰天或涼爽天氣",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
       "is_open_now": true,
       "average_cost": 120
     },
     {
       "source": "Mock_Integration_100",
-      "title": "珍珠奶茶 (台北市大安區和平東路)",
+      "title": "淺水灣 (台北市中山區南京東路)",
       "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 120
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "老梅綠石槽 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "珍珠奶茶 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
       "title": "滷肉飯 (台北市中山區南京東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 100
+      "is_open_now": false,
+      "average_cost": 300
     },
     {
       "source": "Mock_Integration_100",
-      "title": "牛肉麵 (台北市大安區和平東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "title": "牛肉麵 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 50
     },
     {
       "source": "Mock_Integration_100",
       "title": "蚵仔煎 (台北市中山區南京東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "臭豆腐 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "title": "臭豆腐 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 150
+      "is_open_now": false,
+      "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
       "title": "豬血糕 (台北市大安區和平東路)",
-      "link": "https://www.dcard.tw/f/travel",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 100
+      "is_open_now": false,
+      "average_cost": 300
     },
     {
       "source": "Mock_Integration_100",
-      "title": "大腸包小腸 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "title": "大腸包小腸 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 100
     },
     {
       "source": "Mock_Integration_100",
-      "title": "地瓜球 (台北市中山區南京東路)",
+      "title": "地瓜球 (台北市南港區忠孝東路)",
       "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "晴天",
@@ -1245,39 +1245,94 @@
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
+      "is_open_now": false,
+      "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "胡椒餅 (台北市中山區南京東路)",
-      "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "陰天或涼爽天氣",
+      "title": "胡椒餅 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "雨天皆可",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "生煎包 (新北市板橋區縣民大道)",
+      "title": "生煎包 (台北市南港區忠孝東路)",
       "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🍜 在地美食"
+      ],
+      "open_hours": "11:00-21:00",
+      "is_open_now": false,
+      "average_cost": 50
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "小籠包 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "雨天皆可",
       "tags": [
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 300
+      "is_open_now": false,
+      "average_cost": 50
     },
     {
       "source": "Mock_Integration_100",
-      "title": "小籠包 (台北市大安區和平東路)",
+      "title": "棺材板 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 180
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "肉圓 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "10:00-22:00",
+      "is_open_now": false,
+      "average_cost": 120
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "四神湯 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "📸 熱門打卡",
+        "☕ 文青散策"
+      ],
+      "open_hours": "11:00-21:00",
+      "is_open_now": false,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "麵線 (台北市大安區和平東路)",
       "link": "https://www.ptt.cc/bbs/Food",
       "transport_suggestion": "距離捷運站走路 5 分鐘",
       "suitable_weather": "雨天皆可",
@@ -1285,77 +1340,698 @@
         "🍜 在地美食"
       ],
       "open_hours": "11:00-21:00",
-      "is_open_now": true,
-      "average_cost": 150
+      "is_open_now": false,
+      "average_cost": 50
     },
     {
       "source": "Mock_Integration_100",
-      "title": "棺材板 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Taipei",
-      "transport_suggestion": "出捷運站即抵達，交通非常便利",
-      "suitable_weather": "晴天",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "肉圓 (台北市中山區南京東路)",
+      "title": "鼎泰豐 (台北市大安區和平東路)",
       "link": "https://www.dcard.tw/f/travel",
-      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
       "suitable_weather": "晴天",
       "tags": [
         "📸 熱門打卡",
         "☕ 文青散策"
       ],
       "open_hours": "10:00-22:00",
-      "is_open_now": true,
-      "average_cost": 0
-    },
-    {
-      "source": "Mock_Integration_100",
-      "title": "四神湯 (台北市南港區忠孝東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
-      "suitable_weather": "陰天或涼爽天氣",
-      "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
-      ],
-      "open_hours": "11:00-21:00",
-      "is_open_now": true,
+      "is_open_now": false,
       "average_cost": 180
     },
     {
       "source": "Mock_Integration_100",
-      "title": "麵線 (新北市板橋區縣民大道)",
+      "title": "樂麥拉麵 三峽店 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "神川拉麵-三峽店 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "沐沐拉麵 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "麵屋山茶 (三峽學成店) (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "沐白麵屋 (三峽店) (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "元氣屋拉麵 (三峽北大店) (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "一郎拉麵屋 (三峽店) (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "博多拉麵 (三峽學成店) (新北市板橋區縣民大道)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "山田拉麵 (三峽店) (新北市板橋區縣民大道)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "瀧本家拉麵 三峽店 (新北市板橋區縣民大道)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "日式橫濱家系拉麵-家系(三峽北大店) (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "麵屋嵐山 三峽店 (台北市南港區忠孝東路)",
       "link": "https://www.ptt.cc/bbs/Taipei",
       "transport_suggestion": "建議搭乘公車前往，班次密集",
       "suitable_weather": "雨天皆可",
       "tags": [
-        "🍜 在地美食"
+        "🤖 AI推薦"
       ],
-      "open_hours": "11:00-21:00",
+      "open_hours": "00:00-24:00",
       "is_open_now": true,
-      "average_cost": 150
+      "average_cost": 0
     },
     {
       "source": "Mock_Integration_100",
-      "title": "鼎泰豐 (台北市中山區南京東路)",
-      "link": "https://www.ptt.cc/bbs/Food",
-      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "title": "初原麵場 三峽學勤店 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
       "suitable_weather": "陰天或涼爽天氣",
       "tags": [
-        "📸 熱門打卡",
-        "☕ 文青散策"
+        "🤖 AI推薦"
       ],
-      "open_hours": "10:00-22:00",
+      "open_hours": "00:00-24:00",
       "is_open_now": true,
-      "average_cost": 180
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "東京屋台拉麵 (三峽北大店) (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "三峽拉麵 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "豚華拉麵 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "初原麵場 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "鳥鳴子雞白湯ラーメン (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "咖啡瑪榭 中山店 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "libo Cafe.咖啡.coffee (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "卜卜商店｜ L.O. 17:30；無訂位，僅現場候位｜ (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "赤峰街散步與個性小店探索 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "肥前屋鰻魚飯 (中山店) (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "椿 Tsubaki Salon甜點 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "臺北當代藝術館 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "中山商圈特色晚餐 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "半沢日本料理-台北美食 台北日本料理 附近美食 中山區美食 中山區餐廳 中山區日本料理 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "誠品生活南西 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "金の箸日本料理-台北 中山區 美食｜居酒屋｜日式料理｜餐廳｜商業午餐｜定食 推薦 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "潮丼日式定食/平價美食餐廳 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "中山區特色商圈 (新北市板橋區縣民大道)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "POPINA (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "雞湯大叔 誠品南西店 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "月霞 Waha Cafe (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "卜卜商店｜ L.O. 17:30 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "CAFE RACO (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "肥前屋鰻魚飯 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "赤峰街商圈 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "距離捷運站走路 5 分鐘",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "中山商圈人氣餐廳 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "中山商圈 - 赤峰街 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "臺北當代藝術館 (或繼續逛街) (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "大港墘公園 (台北市南港區忠孝東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "瑞光公園 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "彩虹河濱公園 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "內湖運動公園 (台北市中山區南京東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "碧湖公園 兒童遊戲場 (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "碧山巖 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Food",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "NOKE 忠泰樂生活 (新北市板橋區縣民大道)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "雨天皆可",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "極光冰場 Aurora Ice Rink (位於 NOKE 忠泰樂生活內) (新北市板橋區縣民大道)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "搭捷運到達後可轉乘 YouBike",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "NOKE 忠泰樂生活 或 春大直 餐飲 (台北市南港區忠孝東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "建議搭乘公車前往，班次密集",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "NOKE忠泰樂生活 (台北市中山區南京東路)",
+      "link": "https://www.dcard.tw/f/travel",
+      "transport_suggestion": "出捷運站即抵達，交通非常便利",
+      "suitable_weather": "晴天",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
+    },
+    {
+      "source": "Mock_Integration_100",
+      "title": "華漾DIM SUM 忠泰店 (台北市大安區和平東路)",
+      "link": "https://www.ptt.cc/bbs/Taipei",
+      "transport_suggestion": "附近很難停車，搭乘大眾運輸較佳",
+      "suitable_weather": "陰天或涼爽天氣",
+      "tags": [
+        "🤖 AI推薦"
+      ],
+      "open_hours": "00:00-24:00",
+      "is_open_now": true,
+      "average_cost": 0
     }
   ]
 }
