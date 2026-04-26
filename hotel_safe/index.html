@@ -135,44 +135,22 @@
               document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + d + ";";
             });
             document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            
-            // 嘗試恢復 native Google Translate 如果 combo 支援的話
-            var selectField = document.querySelector(".goog-te-combo");
-            if (selectField) {
-              selectField.value = '';
-              var event = document.createEvent("HTMLEvents");
-              event.initEvent("change", true, true);
-              selectField.dispatchEvent(event);
-            }
-            
             window.location.reload();
           }, 300);
           return;
         }
 
-        var selectField = document.querySelector(".goog-te-combo");
-        if (selectField) {
-          setTimeout(() => {
-            selectField.value = langCode;
-            var event = document.createEvent("HTMLEvents");
-            event.initEvent("change", true, true);
-            selectField.dispatchEvent(event);
-            
-            // 等待翻譯執行後淡入並移除 loader
-            setTimeout(() => {
-              loader.style.opacity = '0';
-              loader.style.transition = 'opacity 0.3s ease';
-              setTimeout(() => { if(loader.parentNode) loader.parentNode.removeChild(loader); }, 300);
-              
-              document.body.style.transition = 'opacity 0.3s ease-in';
-              document.body.style.opacity = '1';
-            }, 600);
-          }, 200);
-        } else {
-          // 若元件尚未載入，強制寫入 cookie 並重整
-          document.cookie = "googtrans=/zh-TW/" + langCode + "; path=/;";
-          window.location.reload();
-        }
+        // 強制寫入 cookie 並重整，這是最穩定的切換語言方式
+        setTimeout(() => {
+            var host = location.hostname;
+            var domains = [host, '.' + host];
+            var cookieStr = "googtrans=/zh-TW/" + langCode;
+            domains.forEach(function(d) {
+              document.cookie = cookieStr + "; path=/; domain=" + d + ";";
+            });
+            document.cookie = cookieStr + "; path=/;";
+            window.location.reload();
+        }, 300);
       }
       
       // 初始化檢查是否有設定 cookie 來決定初始按鈕顯示

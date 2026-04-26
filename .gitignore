@@ -1,6 +1,5 @@
 node_modules/
 uploads/
-<<<<<<< Updated upstream
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 let hotelsData = [];
 
 function loadData() {
