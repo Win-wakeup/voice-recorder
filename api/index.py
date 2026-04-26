@@ -24,10 +24,7 @@ root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if root_path not in sys.path:
     sys.path.append(root_path)
 
-try:
-    from social_scraper import run_scraper
-except ImportError:
-    run_scraper = None
+
 
 # ==========================================
 # 0. Logging & Environment
@@ -40,6 +37,7 @@ load_dotenv()
 
 # Read ELEVENLABS at module time (not used at module load)
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+ELEVENLABS_API_KEY_ZH = os.getenv("ELEVENLABS_API_KEY_ZH")
 CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
 CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
 CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
@@ -139,24 +137,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     logger.info("FastAPI Server Started!")
-    if run_scraper:
-        # 發動第一次抓取，確保檔案是最新的
-        try:
-            run_scraper()
-        except Exception as e:
-            logger.error(f"Initial Scraper Run Failed: {e}")
-            
-        # 啟動每半小時的自動更新背景任務
-        async def scraper_loop():
-            while True:
-                await asyncio.sleep(1800) # 30 minutes
-                logger.info("Background Auto-Update Triggered: scraping trends...")
-                try:
-                    await asyncio.to_thread(run_scraper)
-                except Exception as e:
-                    logger.error(f"Background Scraper Failed: {e}")
-                    
-        asyncio.create_task(scraper_loop())
+
 
 # Include Module 2 Routers
 app.include_router(play_taipei.router, prefix="/api/play_taipei", tags=["Play Taipei"])
@@ -470,15 +451,29 @@ async def clone_voice(text: str = Form(...), file: UploadFile = File(...), ride_
     3. 若發生「每月額度已達上限 (65次)」，則自動降級使用預設高品質聲音，確保功能不中斷。
     """
     try:
-        el_key = ELEVENLABS_API_KEY.encode('ascii', 'ignore').decode('ascii').strip() if ELEVENLABS_API_KEY else ""
-        headers = {"xi-api-key": el_key}
+        # [優化 3] 判斷是否為中文
+        is_chinese = any('\u4e00' <= char <= '\u9fff' for char in text)
         
+        # 根據語言決定使用哪一組 API Key (如果有設定 ZH Key 的話)
+        current_key = (ELEVENLABS_API_KEY_ZH if is_chinese and ELEVENLABS_API_KEY_ZH else ELEVENLABS_API_KEY)
+        el_key = current_key.encode('ascii', 'ignore').decode('ascii').strip() if current_key else ""
+        headers = {"xi-api-key": el_key}
+
         # 預設聲音 (Mimi)，作為額度耗盡時的備援
         DEFAULT_VOICE_ID = "zrHiDhphv9ZnVXBqCLjz" 
         voice_id = None
+        
+        if is_chinese:
+            # 使用您在帳號 B 新增的專屬中文語音 (Lili)
+            voice_id = "NIqnuIdrAT3LLSSxN05L" 
+            logger.info(f"🇨🇳 [Native Chinese Voice] Using Account B (Key_ZH) for voice {voice_id}")
+        else:
+            # 預設使用 Rachel 作為英文語音
+            voice_id = "21m00Tcm4TlvDq8ikWAM"
+            logger.info(f"🇺🇸 [English Voice] Using Account A (Default Key) for voice {voice_id}")
 
-        # [優化 1] 檢查快取
-        if ride_id and ride_id in session_voice_ids:
+        # [優化 1] 檢查快取 (僅在尚未決定 voice_id 時執行)
+        if not voice_id and ride_id and ride_id in session_voice_ids:
             voice_id = session_voice_ids[ride_id]
             logger.info(f"♻️ [Voice Cache Hit] Reusing voice {voice_id} for session {ride_id}")
 
@@ -568,70 +563,7 @@ async def hello_world():
         "timestamp": "2026-04-11"
     }
 
-@app.post("/api/fetch_context")
-async def fetch_context(request: ContextRequest):
-    req_time = request.time # format "HH:MM"
-    weather = request.weather # e.g. "雨"
-    
-    valid_pois = []
-    
-    def time_to_minutes(t_str):
-        try:
-            h, m = map(int, t_str.split(":"))
-            return h * 60 + m
-        except:
-            return 0
-            
-    req_minutes = time_to_minutes(req_time)
-    
-    for item in LOCAL_DICT:
-        if not isinstance(item, dict):
-            continue
-            
-        tags = item.get("tags", [])
-        
-        # 1. 天氣判定：如果下雨，如果含有「🌲 自然戶外」但沒有「🖼️ 室內展覽」或「🛍️ 商圈購物」或「🎳 室內娛樂」，就盡量剔除 (雨天不宜)
-        # 基於新的 EMOJI Tags 
-        if weather == "雨" and ("🌲 自然戶外" in tags) and not ("🖼️ 室內展覽" in tags or "🛍️ 商圈購物" in tags or "🎳 室內娛樂" in tags or "🍜 在地美食" in tags):
-            continue
-            
-        # 2. 營業時間判定
-        open_hours = item.get("open_hours", "00:00-24:00")
-        if "-" in open_hours:
-            start_str, end_str = open_hours.split("-")
-            start_min = time_to_minutes(start_str)
-            end_min = time_to_minutes(end_str)
-            
-            # Simple check, ignoring complex cross-midnight for simple mock
-            # Night markets often 17:00-23:59 or 17:00-01:00
-            # If 00:00-24:00, always pass
-            if open_hours != "00:00-24:00":
-                if end_min < start_min: # Cross midnight, e.g. 17:00 - 01:00
-                    # if req=23:00 (1380) -> between 1020 and 1440
-                    # if req=00:30 (30) -> between 0 and 60
-                    if not (req_minutes >= start_min or req_minutes <= end_min):
-                        continue
-                else:
-                    if not (start_min <= req_minutes <= end_min):
-                        continue
-                        
-        valid_pois.append(item)
-        
-    # Read social sentiment trends
-    social_trends = []
-    mock_file = Path(__file__).parent / "social_sentiment_mock.json"
-    if mock_file.exists():
-        try:
-            with open(mock_file, "r", encoding="utf-8") as f:
-                social_data = json.load(f)
-                social_trends = social_data.get("trending_topics", [])
-        except Exception as e:
-            logger.error(f"Failed to read social trends: {e}")
 
-    return {
-        "valid_pois": valid_pois,
-        "social_trends": social_trends
-    }
 
 # Disabled StaticFiles fallthrough to prevent Vercel returning 200 OK HTML on 404s
 # if os.path.exists("public"):

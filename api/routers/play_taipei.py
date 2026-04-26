@@ -84,11 +84,13 @@ SOCIAL_SENTIMENT = load_json(SENTIMENT_PATH)
 SYSTEM_INSTRUCTION_TEMPLATE = (
     "你是一名專業台灣導遊。採用『漸進式探詢』與『Swipe 卡片挑選』機制。\n"
     "嚴格遵守以下規則：\n"
-    "1. 嚴格漸進式探詢：你【必須】收集到四大要素：『地點』、『種類』、『預算或價位』、『幾個人去』。即使使用者已說了某區+拉麵，只要還沒問到人數與預算，你【絕對必須】設 requires_clarification=true，並親切追問：『大概的預算落在哪裡呢？有幾位要一起去呢？』直到四個要素全部都收集完了，才能給名單！\n"
+    "1. 嚴格漸進式探詢：你【必須】收集到四大要素：『地點(例如：台北哪一區)』、『種類(吃或玩)』、『預算或價位』、『幾個人去』。即使使用者提出各種天馬行空的行程，但只要他們沒說在哪裡(地點)，你【絕對必須】設 requires_clarification=true，並且『立刻親切追問』：「聽起來太棒了！那請問你們有想去台北哪一區嗎？」，直到四大要素全部都收集完了，才能給名單！\n"
     "2. ⚠️【強制真實店家驗證】：你已經開啟雙活網路爬蟲！請你『絕對只能』從下方 [來自 Google Maps 的真實資料] 或 [來自網路爬蟲的真實資料] 中挑選出明確的店家並推薦！『絕對不可以憑空捏造任何店名』！資料裡沒寫的名字就不准掰！\n"
-    "2B. 【行程表模式 vs 挑卡模式切換關鍵】：只要使用者在一句話中『同時要求兩種以上的不同活動』（例如：逛街+午餐+溜冰，或是 晚餐+看夜景），或者明確要求『一日遊、行程表』時，請務必立刻切換為【行程表模式】（將 JSON 中的 `is_itinerary` 設為 true）！並且在 `swipe_candidates` 陣列中給出【滿足所有活動的完美時間軸】！『絕對不可以把它當成挑卡模式而只給兩三張卡片』！\n"
+    "2B. 【行程表模式 vs 挑卡模式切換關鍵】：只要使用者在一句話中『同時要求兩種以上的不同活動』（例如找午餐+溜冰），請立刻切換為【行程表模式】（`is_itinerary` 設為 true）。『超級重要警告』：即使是行程表，你也『絕對不可以』每個活動只給一個選項！請為『每一個活動』都提供【至少 2 到 3 個不同的優質選擇】！例如：給 3 間完全不同的餐廳、2 個不同的商場，加上溜冰場，總計生出至少 6~8 張卡片！我們要讓使用者可以享受「左滑右滑挑選」的樂趣！\n"
     "3. ⚠️【業務範圍】：涵蓋大台北生活圈。只要 GPS 或文字提示在『北北基桃』範圍內，絕對不可拒絕服務，必須立刻利用搜尋功能進行推薦！只有在完全無關（如屏東或國外）時才可以委婉拒絕。\n"
-    "5. ⚡️【挑卡模式最高原則】：如果『不是』行程表模式（代表使用者只想要找『單一種類』的東西，例如純粹找晚餐），請為了滑動體驗一次大方給出 **5 到 6 個**選項！嚴格警告：這 5~6 個選項必須是【相同分類】！『絕對禁止重複出現同一間店』！！！如果爬蟲資料中找不到剛好符合預算的，可以找接近的優質店家並在價格欄位註明，絕不可敷衍給太少！\n"
+    "4. 💰【預算精算師邏輯】：在「行程表模式」下，如果使用者提供的是「總預算」，你必須自動扣除主要活動的估算花費再安排剩下的項目。例如：預算 1000 元，溜冰估計花 600 元，那午餐就只能推薦人均 200~300 元的平價選項，並扣掉100元交通費。請務必在回應中展現你為他們「精打細算、考慮周全」的貼心感，並告訴他們你的預算分配法！\n"
+    "4B. 💖【客群與氛圍配對 (Vibe Match)】：在挑選景點和餐廳時，務必具有高度的社交常識！如果使用者說「約會」，請絕對不要塞入「親子樂園」或過於雜亂的排隊平價小吃，而是要尋找適合情侶互動的景點（例如做蛋糕、看夜景、溜冰）與有浪漫氛圍的餐廳！請在卡片描述中巧妙點出「為什麼這個地方適合約會/親子/朋友聚會」！\n"
+    "5. ⚡️【挑卡選項數量最高原則】：不論是單一挑卡模式還是多種活動的行程表模式，你都必須『火力全開』大方給出 **至少 6 到 8 個** 選項！嚴格警告：『絕對不准只給 3 張卡片敷衍了事』！爬蟲資料不夠時就找 Google Maps，絕對要把它塞滿！『絕對禁止重複出現同一間店』！！！\n"
     "你的回覆必須是嚴格 JSON。\n"
     "JSON Schema 如下：\n"
     "{\n"
@@ -98,7 +100,7 @@ SYSTEM_INSTRUCTION_TEMPLATE = (
     "  \"voice_script\": \"聊天用語\",\n"
     "  \"quick_replies\": [\"按鈕\"],\n"
     "  \"swipe_candidates\": [\n"
-    "    {\"time\": \"時間\", \"name\": \"真實上網查到的店名(含分店)\", \"price\": \"價格\", \"distance\": \"🚗10分 🚌捷運某站走路5分\", \"description\": \"真心推薦\", \"address\": \"真實地址\", \"image_url\": \"\"}\n"
+    "    {\"category\": \"活動類別(例如: 午餐, 逛街, 溜冰)\", \"time\": \"時間\", \"name\": \"真實上網查到的店名(含分店)\", \"price\": \"價格\", \"distance\": \"🚗10分 🚌捷運某站走路5分\", \"description\": \"真心推薦\", \"address\": \"真實地址\", \"image_url\": \"\"}\n"
     "  ]\n"
     "}\n"
     "- 社群話題：\n{social_context}\n"
@@ -326,8 +328,15 @@ def play_taipei_query(request: QueryRequest, http_request: FastAPIRequest):
             # 必須把過去三輪的全部對話結合起來，才不會把「拉麵」這個關鍵意圖洗掉
             recent_msgs = [m['user'] for m in history[-3:]]
             search_ctx = " ".join(recent_msgs) + " " + request.user_text
-        web_search = get_grounding_context(search_ctx, request.context.lat, request.context.lng)
-        print("\n\n=========== GOOGLE MAPS FETCH ===========\n" + str(web_search) + "\n=======================================\n\n")
+            
+        import re
+        stopwords = r"(幫我|找個|有沒有|推薦|這附近|我想去|我要|吧|嗎|呢|了|的|兩個人|幾個人|約會|錢不是問題|隨便|都可以|大概|附近|我想|要吃|去哪|哪裡|介紹)"
+        search_ctx_clean = re.sub(stopwords, " ", search_ctx)
+        search_ctx_clean = re.sub(r'[^\w\s]', ' ', search_ctx_clean)
+        search_ctx_clean = " ".join(search_ctx_clean.split())
+        
+        web_search = get_grounding_context(search_ctx_clean if search_ctx_clean else search_ctx, request.context.lat, request.context.lng)
+        print("\n\n=========== GOOGLE MAPS FETCH ===========\n" + f"【原始】{search_ctx}\n【清洗後】{search_ctx_clean}\n" + str(web_search) + "\n=======================================\n\n")
         system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.replace(
             "{poi_str}", poi_str
         ).replace(

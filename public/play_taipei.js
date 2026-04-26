@@ -60,17 +60,24 @@ function toggleMicButton(enabled) {
 }
 
 // --- GPS 獲取邏輯 ---
+let cachedGps = null;
 function getCurrentGPS() {
+    if (cachedGps) return Promise.resolve(cachedGps);
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
             console.warn("瀏覽器不支援 GPS");
-            resolve({ lat: 25.0330, lng: 121.5654 }); 
+            cachedGps = { lat: 25.0330, lng: 121.5654 };
+            resolve(cachedGps); 
         } else {
             navigator.geolocation.getCurrentPosition(
-                position => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
+                position => {
+                    cachedGps = { lat: position.coords.latitude, lng: position.coords.longitude };
+                    resolve(cachedGps);
+                },
                 error => {
                     console.warn("GPS 獲取失敗，使用預設座標", error);
-                    resolve({ lat: 25.0330, lng: 121.5654 });
+                    cachedGps = { lat: 25.0330, lng: 121.5654 };
+                    resolve(cachedGps);
                 },
                 { timeout: 5000 }
             );
@@ -192,17 +199,17 @@ async function handleUserInput(textInput) {
             showStatus("請點擊選項或輸入您的回覆！");
         } else {
             // Stage 2: AI has collected enough constraints and generated pool
-            addChatBubble("ai", llmFinalData.voice_script || "我已經挑選出一些最棒的選項了，請從畫廊中確認！");
+            addChatBubble("ai", llmFinalData.voice_script || "我已經大方挑選出一些最棒的選項了！請左滑淘汰、右滑收藏！");
             
-            // Render gallery or directly show itinerary if the user asked for a schedule
             if(llmFinalData.swipe_candidates && llmFinalData.swipe_candidates.length > 0) {
-                if (llmFinalData.is_itinerary === true) {
-                    renderTimeline(llmFinalData.swipe_candidates, {lat: gpsCoords.lat, lng: gpsCoords.lng});
-                    showView('itinerary-view');
-                } else {
-                    renderGallery(llmFinalData.swipe_candidates);
-                    showView('gallery-view');
-                }
+                // IMPORTANT: ALWAYS go to the swipe phase first so the user can curate their choices
+                window.swipeCandidates = llmFinalData.swipe_candidates;
+                window.swipeItineraryMode = (llmFinalData.is_itinerary === true);
+                
+                // Set target count (e.g. 1 for single query, or roughly 3 for itinerary)
+                sessionStorage.setItem("targetCount", llmFinalData.expected_target_count || (window.swipeItineraryMode ? 3 : 1));
+                
+                startSwipePhase();
             } else {
                  addChatBubble("ai", "抱歉，目前找不到符合您條件的地點。");
                  showStatus("請更改條件後再試一次！");
@@ -419,11 +426,8 @@ window.generateFinalItinerary = async function() {
 };
 
 // ==========================================
-// 1V1 ELIMINATION TOURNAMENT LOGIC
+// 1V1 ELIMINATION TOURNAMENT LOGIC (Categorized & Deduplicated)
 // ==========================================
-window.tournamentQueue = [];
-window.tournamentWinners = [];
-window.tournamentTarget = 1;
 
 window.pickRandom = function() {
     let target = parseInt(sessionStorage.getItem("targetCount")) || 1;
@@ -433,10 +437,39 @@ window.pickRandom = function() {
 };
 
 window.startTournament = function() {
-    window.tournamentQueue = [...window.likedVenues];
-    window.tournamentWinners = [];
-    window.tournamentTarget = parseInt(sessionStorage.getItem("targetCount")) || 1;
-    document.getElementById('swipe-stats').innerHTML = `<strong>⚔️ 淘汰賽進行中</strong>`;
+    // 1. Deduplicate identical venues
+    const uniqueVenues = [];
+    const seenNames = new Set();
+    for (let v of window.likedVenues) {
+        if (!seenNames.has(v.name)) {
+            uniqueVenues.push(v);
+            seenNames.add(v.name);
+        }
+    }
+    window.likedVenues = uniqueVenues;
+
+    // 2. Group venues by Category
+    const tourneyCategories = {};
+    for (let v of window.likedVenues) {
+        const cat = v.category || "熱門精選";
+        if (!tourneyCategories[cat]) tourneyCategories[cat] = [];
+        tourneyCategories[cat].push(v);
+    }
+    
+    // 3. Prepare Queue
+    window.tourneyQueueList = [];
+    window.tourneyFinalItinerary = [];
+    window.tourneyActiveCategory = null;
+
+    for (let cat in tourneyCategories) {
+        if (tourneyCategories[cat].length > 1) {
+            window.tourneyQueueList.push({ category: cat, queue: [...tourneyCategories[cat]], winners: [] });
+        } else if (tourneyCategories[cat].length === 1) {
+            window.tourneyFinalItinerary.push(tourneyCategories[cat][0]);
+        }
+    }
+
+    document.getElementById('swipe-stats').innerHTML = `<strong>⚔️ 分類淘汰賽準備中！</strong>`;
     renderTournamentCard();
 };
 
@@ -453,9 +486,9 @@ function buildTourneyCard(poi, side) {
 
 window.winTournament = function(side) {
     if (side === 'left') {
-        window.tournamentWinners.push(window.lastLeftPoi);
+        window.tourneyActiveCategory.winners.push(window.lastLeftPoi);
     } else {
-        window.tournamentWinners.push(window.lastRightPoi);
+        window.tourneyActiveCategory.winners.push(window.lastRightPoi);
     }
     renderTournamentCard();
 };
@@ -463,18 +496,37 @@ window.winTournament = function(side) {
 function renderTournamentCard() {
     const stack = document.getElementById('card-stack');
     
-    if (window.tournamentQueue.length === 0) {
-        if (window.tournamentWinners.length <= window.tournamentTarget) {
-            window.likedVenues = [...window.tournamentWinners];
-            generateFinalItinerary();
-            return;
+    // Check if the current category is empty or needs winner re-evaluation
+    if (!window.tourneyActiveCategory || window.tourneyActiveCategory.queue.length === 0) {
+        // Re-evaluate winners if active
+        if (window.tourneyActiveCategory && window.tourneyActiveCategory.winners.length > 0) {
+            if (window.tourneyActiveCategory.winners.length > 1) {
+                // If more than 1 winner, move them to queue for another round!
+                window.tourneyActiveCategory.queue = [...window.tourneyActiveCategory.winners];
+                window.tourneyActiveCategory.winners = [];
+            } else {
+                // We have exactly 1 winner for this category! Save it.
+                window.tourneyFinalItinerary.push(window.tourneyActiveCategory.winners[0]);
+                window.tourneyActiveCategory = null;
+            }
         }
-        window.tournamentQueue = [...window.tournamentWinners];
-        window.tournamentWinners = [];
+        
+        // Grab next category
+        if (!window.tourneyActiveCategory) {
+            if (window.tourneyQueueList.length > 0) {
+                window.tourneyActiveCategory = window.tourneyQueueList.shift();
+            } else {
+                // All categories are done! Generate itinerary!
+                window.likedVenues = [...window.tourneyFinalItinerary];
+                generateFinalItinerary();
+                return;
+            }
+        }
     }
     
-    if (window.tournamentQueue.length === 1) {
-        window.tournamentWinners.push(window.tournamentQueue.pop());
+    // Handle odd number items
+    if (window.tourneyActiveCategory.queue.length === 1) {
+        window.tourneyActiveCategory.winners.push(window.tourneyActiveCategory.queue.pop());
         renderTournamentCard();
         return;
     }
