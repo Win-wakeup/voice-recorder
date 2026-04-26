@@ -24,10 +24,7 @@ root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if root_path not in sys.path:
     sys.path.append(root_path)
 
-try:
-    from social_scraper import run_scraper
-except ImportError:
-    run_scraper = None
+
 
 # ==========================================
 # 0. Logging & Environment
@@ -140,24 +137,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     logger.info("FastAPI Server Started!")
-    if run_scraper:
-        # 發動第一次抓取，確保檔案是最新的
-        try:
-            run_scraper()
-        except Exception as e:
-            logger.error(f"Initial Scraper Run Failed: {e}")
-            
-        # 啟動每半小時的自動更新背景任務
-        async def scraper_loop():
-            while True:
-                await asyncio.sleep(1800) # 30 minutes
-                logger.info("Background Auto-Update Triggered: scraping trends...")
-                try:
-                    await asyncio.to_thread(run_scraper)
-                except Exception as e:
-                    logger.error(f"Background Scraper Failed: {e}")
-                    
-        asyncio.create_task(scraper_loop())
+
 
 # Include Module 2 Routers
 app.include_router(play_taipei.router, prefix="/api/play_taipei", tags=["Play Taipei"])
