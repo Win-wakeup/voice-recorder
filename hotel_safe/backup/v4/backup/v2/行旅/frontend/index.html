@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Stay - 台北性價比飯店查詢</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左側側邊欄：搜尋與列表 -->
+        <aside class="sidebar">
+            <header style="position: relative;">
+                <div class="logo">
+                    <span class="icon">🏨</span>
+                    <h1>Safe Stay<br><small id="ui-subtitle">AI 智慧旅宿守門員</small></h1>
+                </div>
+                <p class="subtitle" id="ui-desc">為您找出附近高性價比的住宿，確保安心且超值。</p>
+                
+                <div style="position: absolute; right: 1.5rem; top: 1.5rem;">
+                    <select id="langSelect" class="custom-input" style="padding: 6px 10px; width: auto; font-size: 0.85rem; background: rgba(0,0,0,0.4);">
+                        <option value="zh-TW">🇹🇼 繁中</option>
+                        <option value="en">🇺🇸 EN</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="controls">
+                <div class="search-box" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <input type="text" id="locationInput" class="custom-input" placeholder="手動搜尋地點 (如: 台北101)">
+                    <button id="searchBtn" class="btn primary-btn" style="width: auto; padding: 12px;">🔍</button>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <select id="distanceSelect" class="custom-input">
+                        <option value="0,0.5">0 ~ 500 公尺 (近距離)</option>
+                        <option value="0.5,1">500 公尺 ~ 1 公里 (步程)</option>
+                        <option value="1,5">1 ~ 5 公里 (短程車程)</option>
+                        <option value="5,10">5 ~ 10 公里 (長程距離)</option>
+                    </select>
+                </div>
+
+                <div id="orSeparator" style="text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 12px;">— 或者 —</div>
+
+                <button id="locateBtn" class="btn primary-btn" style="background:#475569; box-shadow:none;">
+                    <span class="icon">📍</span> 我目前的位置
+                </button>
+            </div>
+
+            <div class="loading-state hidden" id="loadingState">
+                <div class="spinner"></div>
+                <span id="ui-loading">分析周邊即時房價中...</span>
+            </div>
+
+            <div class="hotel-list-container">
+                <div class="list-header hidden" id="listHeader">
+                    <h2 id="ui-top10">Top 10 行旅推薦</h2>
+                    <button id="exportBtn" class="btn icon-btn" title="匯出評估包給隊友" disabled>
+                        💾 <span id="ui-export">匯出 JSON</span>
+                    </button>
+                </div>
+                <ul id="hotelList" class="hotel-list">
+                    <!-- 飯店卡片動態插入 -->
+                    <li class="empty-state" id="ui-empty">請點擊上方按鈕開始搜尋</li>
+                </ul>
+            </div>
+            
+        </aside>
+
+        <!-- 右側：地圖 -->
+        <main class="map-container">
+            <div id="map"></div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>

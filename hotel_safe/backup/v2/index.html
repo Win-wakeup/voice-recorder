@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台灣合法旅宿查詢系統 | 安心住宿</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  </head>
+  <body>
+    <div class="bg-mesh"></div>
+
+    <div class="container">
+      <header class="hero">
+        <div class="title-badge">Taiwan Open Data</div>
+        <h1>尋找安心的旅宿<br>從合法登記開始</h1>
+        <p>整合交通部觀光署開放資料庫，提供最即時、權威的台灣合法旅館與民宿查詢服務。拒絕日租套房，保障您的旅遊安全。</p>
+        
+        <div class="search-wrapper">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="輸入旅宿名稱、地區或地址 (例如：台北、阿里山、知本)" autocomplete="off" />
+            <button id="searchBtn" class="search-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span>搜尋</span>
+            </button>
+            <div id="suggestionsBox" class="suggestions-dropdown hidden"></div>
+          </div>
+        </div>
+
+        <!-- 附近搜尋功能列 (整合自行旅專案) -->
+        <div class="nearby-controls" style="display: flex; gap: 0.8rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;">
+          <select id="distanceSelect" class="search-input" style="width: auto; min-width: 200px; padding: 0.8rem 1.5rem; border-radius: 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+              <option value="0,0.5" style="color: black;">距離 0 ~ 500 公尺</option>
+              <option value="0.5,1" style="color: black;">距離 500 公尺 ~ 1 公里</option>
+              <option value="1,5" style="color: black;">距離 1 ~ 5 公里</option>
+              <option value="5,10" style="color: black;">距離 5 ~ 10 公里</option>
+          </select>
+          <button type="button" id="locateBtn" class="search-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">
+              📍 以現在位子找附近高 CP 值住宿
+          </button>
+        </div>
+      </header>
+
+      <main id="resultsContainer">
+        <!-- Loading state -->
+        <div id="loading" class="state-panel hidden">
+          <div class="spinner"></div>
+          <h3>AI 智慧搜尋中</h3>
+          <p>正在比對全台合法旅宿資料...</p>
+        </div>
+        
+        <!-- Initial state -->
+        <div id="initial" class="state-panel">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <h3>開始您的探索</h3>
+          <p>在上方搜尋列輸入關鍵字，即可快速找尋合法旅宿</p>
+        </div>
+
+        <!-- No results state -->
+        <div id="noResults" class="state-panel hidden">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+          <h3>找不到符合條件的旅宿</h3>
+          <p>可能是該旅宿未合法登記，或請嘗試更換關鍵字重新搜尋</p>
+        </div>
+
+        <!-- Results -->
+        <div id="hotelList" class="hotel-list hidden">
+          <!-- Cards will be injected via JS -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Hotel Details Modal -->
+    <div id="hotelModal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <button id="closeModalBtn" class="close-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div id="modalBody">
+          <!-- Dynamically injected content -->
+        </div>
+      </div>
+    </div>
+
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
